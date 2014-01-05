@@ -40,7 +40,7 @@ Output
     730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525
     619cba8e8e05826e9b8c519c0a5c68f4fb653e8a3d8aa04bb2c8cd4c
 
-It also support UTF-8 encoding:
+It also supports UTF-8 encoding:
 
 Code
 ```JavaScript
