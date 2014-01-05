@@ -92,6 +92,9 @@ And then you could use like this:
 'message'.sha256();
 'message'.sha224();
 ```
+## License
+The project is released under the [MIT license](LICENSE.txt).
+
 ## Contact
 The project's website is located at https://github.com/emn178/js-sha256  
 Author: emn178@gmail.com

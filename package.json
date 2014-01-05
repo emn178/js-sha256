@@ -20,6 +20,7 @@
     "cryptography",
     "HMAC"
   ],
+  "license": "MIT",
   "author": "emn178 <emn178@gmail.com>",
   "homepage": "https://github.com/emn178/js-sha256",
   "bugs": {
