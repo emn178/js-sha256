@@ -1,5 +1,5 @@
 # js-sha256
-This is a simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
+A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 
 ## Install
 For node.js, you can use this command to install:
