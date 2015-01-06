@@ -1,12 +1,32 @@
 # js-sha256
+[![Build Status](https://api.travis-ci.org/emn178/js-sha256.png)](https://travis-ci.org/emn178/js-sha256)
+[![Build Status](https://coveralls.io/repos/emn178/js-sha256/badge.png?branch=master)](https://coveralls.io/r/emn178/js-sha256?branch=master)  
+[![NPM](https://nodei.co/npm/js-sha256.png?stars&downloads)](https://nodei.co/npm/js-sha256/)  
 A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 
-## Install
+## Demo
+[SHA256 Online](http://emn178.github.io/online-tools/sha256.html)  
+[SHA224 Online](http://emn178.github.io/online-tools/sha224.html)  
+
+## Download
+[Compress](https://raw.github.com/emn178/js-sha256/master/build/sha256.min.js)  
+[Uncompress](https://raw.github.com/emn178/js-sha256/master/src/sha256.js)
+
+## Installation
+You can also install js-sha256 by using Bower.
+
+    bower install js-sha256
+
 For node.js, you can use this command to install:
 
     npm install js-sha256
 
 ## Usage
+You could use like this:
+```JavaScript
+sha256('Message to hash');
+sha224('Message to hash');
+```
 If you use node.js, you should require the module first:
 ```JavaScript
 sha256 = require('js-sha256');
@@ -16,20 +36,42 @@ or
 sha256 = require('js-sha256').sha256;
 sha224 = require('js-sha256').sha224;
 ```
-And you could use like this:
-```JavaScript
-sha256('Message to hash');
-sha224('Message to hash');
-```
+
+### Methods
+
+#### sha256(str, asciiOnly)
+
+Hash string to sha256, set asciiOnly to true for better performace if you ensure input is ascii.
+
+##### *str: `String`*
+
+String to hash.
+
+##### *asciiOnly: `Boolean` (default: `false`)*
+
+Specify the string encoding is ASCII.
+
+#### sha225(str, asciiOnly)
+
+Hash string to sha225, set asciiOnly to true for better performace if you ensure input is ascii.
+
+##### *str: `String`*
+
+String to hash.
+
+##### *asciiOnly: `Boolean` (default: `false`)*
+
+Specify the string encoding is ASCII.
+
 ## Example
 Code
 ```JavaScript
 sha256('');
-sha256('The quick brown fox jumps over the lazy dog');
-sha256('The quick brown fox jumps over the lazy dog.');
+sha256('The quick brown fox jumps over the lazy dog', true);
+sha256('The quick brown fox jumps over the lazy dog.', true);
 sha224('');
-sha224('The quick brown fox jumps over the lazy dog');
-sha224('The quick brown fox jumps over the lazy dog.');
+sha224('The quick brown fox jumps over the lazy dog', true);
+sha224('The quick brown fox jumps over the lazy dog.', true);
 ```
 Output
 
@@ -51,15 +93,6 @@ Output
 
     72726d8818f693066ceb69afa364218b692e62ea92b385782363780f47529c21
     dfbab71afdf54388af4d55f8bd3de8c9b15e0eb916bf9125f4a959d4
-
-## Tests
-You can open `tests/index.html` in browser or use node.js to run test
-
-    node tests/node-test.js
-
-or
-
-    npm test
 
 ## Extensions
 ### jQuery
