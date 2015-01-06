@@ -51,9 +51,9 @@ String to hash.
 
 Specify the string encoding is ASCII.
 
-#### sha225(str, asciiOnly)
+#### sha224(str, asciiOnly)
 
-Hash string to sha225, set asciiOnly to true for better performace if you ensure input is ascii.
+Hash string to sha224, set asciiOnly to true for better performace if you ensure input is ascii.
 
 ##### *str: `String`*
 
