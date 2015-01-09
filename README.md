@@ -94,6 +94,10 @@ Output
     72726d8818f693066ceb69afa364218b692e62ea92b385782363780f47529c21
     dfbab71afdf54388af4d55f8bd3de8c9b15e0eb916bf9125f4a959d4
 
+## Benchmark
+[ASCII](http://jsperf.com/sha256-ascii/)  
+[UTF8](http://jsperf.com/sha256-utf8/)
+
 ## Extensions
 ### jQuery
 If you prefer jQuery style, you can add following code to add a jQuery extension.
