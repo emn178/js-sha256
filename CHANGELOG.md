@@ -1,4 +1,8 @@
-# v0.1.3 / 2015-01-06
+# v0.1.3 / 2015-01-09
+
+* Improve performance.
+
+# v0.1.2 / 2015-01-06
 
 * Add bower package.
 * Fixed JSHint warnings.
@@ -7,8 +11,8 @@
 
 # v0.1.1 / 2014-07-27
 
-Fixed accents bug
+* Fixed accents bug
 
 # v0.1.0 / 2014-01-05
 
-Initial release
+* Initial release

@@ -1,5 +1,5 @@
 /*
- * js-sha256 v0.1.2
+ * js-sha256 v0.1.3
  * https://github.com/emn178/js-sha256
  *
  * Copyright 2014-2015, emn178@gmail.com
@@ -34,11 +34,11 @@
       is256 = true;
     }
 
-    var blocks, h0, h1, h2, h3, h4, h5, h6, h7;
+    var chunks, h0, h1, h2, h3, h4, h5, h6, h7;
     if(!asciiOnly && /[^\x00-\x7F]/.test(message)) {
-      blocks = getBlocksFromUtf8(message);
+      chunks = getChunksFromUtf8(message);
     } else {
-      blocks = getBlocksFromAscii(message);
+      chunks = getChunksFromAscii(message);
     }
     if(is256) {
       h0 = 0x6a09e667;
@@ -60,53 +60,90 @@
       h7 = 0xbefa4fa4;
     }
 
-    for(var i = 0, length = blocks.length;i < length;i += 16) {
-      var w = [], s0, s1, j;
-      for(j = 0;j < 16;++j) {
-        w[j] = blocks[i + j];
-      }
+    for(var i = 0, length = chunks.length;i < length;++i) {
+      var w = chunks[i], s0, s1, j, tmp1, tmp2, tmp3, maj, t1, t2, ch, 
+          a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+
       for(j = 16;j < 64;++j) {
-        s0 = rightrotate(w[j - 15], 7) ^ rightrotate(w[j - 15], 18) ^ (w[j - 15] >>> 3);
-        s1 = rightrotate(w[j - 2], 17) ^ rightrotate(w[j - 2], 19) ^ (w[j - 2] >>> 10);
-        w[j] = w[j - 16] + s0 + w[j - 7] + s1;
+        // rightrotate
+        tmp1 = tmp2 = w[j - 15];
+        tmp1 = (tmp1 >>> 7) | (tmp1 << 25);
+        tmp2 = (tmp2 >>> 18) | (tmp2 << 14);
+        s0 = tmp1 ^ tmp2 ^ (w[j - 15] >>> 3);
+        tmp1 = tmp2 = w[j - 2];
+        tmp1 = (tmp1 >>> 17) | (tmp1 << 15);
+        tmp2 = (tmp2 >>> 19) | (tmp2 << 13);
+        s1 = tmp1 ^ tmp2 ^ (w[j - 2] >>> 10);
+        w[j] = (w[j - 16] + s0 + w[j - 7] + s1) << 0;
       }
 
-      var a = h0;
-      var b = h1;
-      var c = h2;
-      var d = h3;
-      var e = h4;
-      var f = h5;
-      var g = h6;
-      var h = h7;
-      var maj, t1, t2, ch;
-
-      for(j = 0;j < 64;++j) {
-        s0 = rightrotate(a, 2) ^ rightrotate(a, 13) ^ rightrotate(a, 22);
+      for(j = 0;j < 64;j += 4) {
+        tmp1 = (a >>> 2) | (a << 30);
+        tmp2 = (a >>> 13) | (a << 19);
+        tmp3 = (a >>> 22) | (a << 10);
+        s0 = tmp1 ^ tmp2 ^ tmp3;
+        tmp1 = (e >>> 6) | (e << 26);
+        tmp2 = (e >>> 11) | (e << 21);
+        tmp3 = (e >>> 25) | (e << 7);
+        s1 = tmp1 ^ tmp2 ^ tmp3;
         maj = (a & b) ^ (a & c) ^ (b & c);
-        t2 = s0 + maj;
-        s1 = rightrotate(e, 6) ^ rightrotate(e, 11) ^ rightrotate(e, 25);
-        ch = (e & f) ^ ((~ e) & g);
-        t1 = (h + s1 + ch + K[j] + w[j]) & 0xffffffff;
-
-        h = g;
-        g = f;
-        f = e;
-        e = d + t1;
-        d = c;
-        c = b;
-        b = a;
-        a = t1 + t2;
+        ch = (e & f) ^ (~e & g);
+        t1 = (h + s1 + ch + K[j + 0] + w[j + 0]) << 0;
+        t2 = (s0 + maj) << 0;
+        h = (d + t1) << 0;
+        d = (t1 + t2) << 0;
+        tmp1 = (d >>> 2) | (d << 30);
+        tmp2 = (d >>> 13) | (d << 19);
+        tmp3 = (d >>> 22) | (d << 10);
+        s0 = tmp1 ^ tmp2 ^ tmp3;
+        tmp1 = (h >>> 6) | (h << 26);
+        tmp2 = (h >>> 11) | (h << 21);
+        tmp3 = (h >>> 25) | (h << 7);
+        s1 = tmp1 ^ tmp2 ^ tmp3;
+        maj = (d & a) ^ (d & b) ^ (a & b);
+        ch = (h & e) ^ (~h & f);
+        t1 = (g + s1 + ch + K[j + 1] + w[j + 1]) << 0;
+        t2 = (s0 + maj) << 0;
+        g = (c + t1) << 0;
+        c = (t1 + t2) << 0;
+        tmp1 = (c >>> 2) | (c << 30);
+        tmp2 = (c >>> 13) | (c << 19);
+        tmp3 = (c >>> 22) | (c << 10);
+        s0 = tmp1 ^ tmp2 ^ tmp3;
+        tmp1 = (g >>> 6) | (g << 26);
+        tmp2 = (g >>> 11) | (g << 21);
+        tmp3 = (g >>> 25) | (g << 7);
+        s1 = tmp1 ^ tmp2 ^ tmp3;
+        maj = (c & d) ^ (c & a) ^ (d & a);
+        ch = (g & h) ^ (~g & e);
+        t1 = (f + s1 + ch + K[j + 2] + w[j + 2]) << 0;
+        t2 = (s0 + maj) << 0;
+        f = (b + t1) << 0;
+        b = (t1 + t2) << 0;
+        tmp1 = (b >>> 2) | (b << 30);
+        tmp2 = (b >>> 13) | (b << 19);
+        tmp3 = (b >>> 22) | (b << 10);
+        s0 = tmp1 ^ tmp2 ^ tmp3;
+        tmp1 = (f >>> 6) | (f << 26);
+        tmp2 = (f >>> 11) | (f << 21);
+        tmp3 = (f >>> 25) | (f << 7);
+        s1 = tmp1 ^ tmp2 ^ tmp3;
+        maj = (b & c) ^ (b & d) ^ (c & d);
+        ch = (f & g) ^ (~f & h);
+        t1 = (e + s1 + ch + K[j + 3] + w[j + 3]) << 0;
+        t2 = (s0 + maj) << 0;
+        e = (a + t1) << 0;
+        a = (t1 + t2) << 0;
       }
 
-      h0 += a;
-      h1 += b;
-      h2 += c;
-      h3 += d;
-      h4 += e;
-      h5 += f;
-      h6 += g;
-      h7 += h;
+      h0 = (h0 + a) << 0;
+      h1 = (h1 + b) << 0;
+      h2 = (h2 + c) << 0;
+      h3 = (h3 + d) << 0;
+      h4 = (h4 + e) << 0;
+      h5 = (h5 + f) << 0;
+      h6 = (h6 + g) << 0;
+      h7 = (h7 + h) << 0;
     }
 
     var hex = toHexString(h0) + toHexString(h1)+ toHexString(h2) + toHexString(h3) + toHexString(h4) + toHexString(h5) + toHexString(h6);
@@ -114,10 +151,6 @@
       hex += toHexString(h7);
     }
     return hex;
-  };
-
-  var rightrotate = function(x, c) {
-    return (x >>> c) | (x << (32 - c));
   };
 
   var toHexString = function(num) {
@@ -153,38 +186,39 @@
     return bytes;
   };
 
-  var getBlocksFromAscii = function(message) {
+  var getChunksFromAscii = function(message) {
     // a block is 32 bits(4 bytes), a chunk is 512 bits(64 bytes)
     var length = message.length;
     var chunkCount = ((length + 8) >> 6) + 1;
-    var blockCount = chunkCount << 4; // chunkCount * 16
-    var blocks = [], i;
-    for(i = 0;i < blockCount;++i) {
-      blocks[i] = 0;
+    var chunks = [], blocks, i;
+    for(i = 0;i < chunkCount;++i) {
+      chunks[i] = blocks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
     for(i = 0;i < length;++i) {
-      blocks[i >> 2] |= message.charCodeAt(i) << (3 - (i & 3) << 3);
+      blocks = chunks[i >> 6];
+      blocks[(i & 63) >> 2] |= message.charCodeAt(i) << (3 - (i & 3) << 3);
     }
-    blocks[i >> 2] |= 0x80 << (3 - (i & 3) << 3);
-    blocks[blockCount - 1] = length << 3; // length * 8
-    return blocks;
+    blocks[(i & 63) >> 2] |= 0x80 << (3 - (i & 3) << 3);
+    blocks[15] = length << 3; // length * 8
+    return chunks;
   };
 
-  var getBlocksFromUtf8 = function(message) {
+  var getChunksFromUtf8 = function(message) {
+    // a block is 32 bits(4 bytes), a chunk is 512 bits(64 bytes)
     var bytes = getBytesFromUtf8(message);
     var length = bytes.length;
     var chunkCount = ((length + 8) >> 6) + 1;
-    var blockCount = chunkCount << 4; // chunkCount * 16
-    var blocks = [], i;
-    for(i = 0;i < blockCount;++i) {
-      blocks[i] = 0;
+    var chunks = [], blocks, i;
+    for(i = 0;i < chunkCount;++i) {
+      chunks[i] = blocks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
     for(i = 0;i < length;++i) {
-      blocks[i >> 2] |= bytes[i] << (3 - (i & 3) << 3);
+      blocks = chunks[i >> 6];
+      blocks[(i & 63) >> 2] |= bytes[i] << (3 - (i & 3) << 3);
     }
-    blocks[i >> 2] |= 0x80 << (3 - (i & 3) << 3);
-    blocks[blockCount - 1] = length << 3; // length * 8
-    return blocks;
+    blocks[(i & 63) >> 2] |= 0x80 << (3 - (i & 3) << 3);
+    blocks[15] = length << 3; // length * 8
+    return chunks;
   };
 
   if(typeof(module) != 'undefined') {
