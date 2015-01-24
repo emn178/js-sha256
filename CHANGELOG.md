@@ -1,3 +1,7 @@
+# v0.1.4 / 2015-01-24
+
+* Improve performance.
+
 # v0.1.3 / 2015-01-09
 
 * Improve performance.

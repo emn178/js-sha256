@@ -20,6 +20,7 @@ describe('sha256', function() {
       it('should be successful', function() {
         expect(sha256('中文')).to.be('72726d8818f693066ceb69afa364218b692e62ea92b385782363780f47529c21');
         expect(sha256('aécio')).to.be('53196d1acfce0c4b264e01e8018c989d571351f59e33f055f76ff15b4f0516c6');
+        expect(sha256('𠜎')).to.be('8d10a48685dbc34484696de7ea7434d80a54c1d60100530faccf697463ef19c9');
       });
     });
 
@@ -53,6 +54,7 @@ describe('sha224', function() {
       it('should be successful', function() {
         expect(sha224('中文')).to.be('dfbab71afdf54388af4d55f8bd3de8c9b15e0eb916bf9125f4a959d4');
         expect(sha224('aécio')).to.be('d12841cafd89c534924a839e62bf35a2b5f3717b7802eb19bd8d8e15');
+        expect(sha224('𠜎')).to.be('eaa0129b5509f5701db218fb7076b282e4409da52d06363aa3bdd63d');
       });
     });
 

@@ -10,3 +10,6 @@ install:
   - npm install
 script:
   - npm run-script coveralls
+branches:
+  only:
+    - master

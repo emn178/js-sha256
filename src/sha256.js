@@ -1,5 +1,5 @@
 /*
- * js-sha256 v0.1.3
+ * js-sha256 v0.1.4
  * https://github.com/emn178/js-sha256
  *
  * Copyright 2014-2015, emn178@gmail.com
@@ -10,7 +10,16 @@
 ;(function(root, undefined) {
   'use strict';
 
+  var NODE_JS = typeof(module) != 'undefined';
+  if(NODE_JS) {
+    root = global;
+    if(root.JS_SHA256_TEST) {
+      root.navigator = { userAgent: 'Firefox'};
+    }
+  }
+  var FIREFOX = (root.JS_SHA256_TEST || !NODE_JS) && navigator.userAgent.indexOf('Firefox') != -1;
   var HEX_CHARS = '0123456789abcdef'.split('');
+  var SHIFT = [24, 16, 8, 0];
 
   var K =[0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
           0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -30,10 +39,6 @@
   };
 
   var sha2 = function(message, is256, asciiOnly) {
-    if(is256 === undefined) {
-      is256 = true;
-    }
-
     var chunks, h0, h1, h2, h3, h4, h5, h6, h7;
     if(!asciiOnly && /[^\x00-\x7F]/.test(message)) {
       chunks = getChunksFromUtf8(message);
@@ -61,7 +66,7 @@
     }
 
     for(var i = 0, length = chunks.length;i < length;++i) {
-      var w = chunks[i], s0, s1, j, tmp1, tmp2, tmp3, maj, t1, t2, ch, 
+      var w = chunks[i], s0, s1, j, tmp1, tmp2, tmp3, maj, t1, t2, ch, ab, da, cd, bc,
           a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
 
       for(j = 16;j < 64;++j) {
@@ -74,9 +79,10 @@
         tmp1 = (tmp1 >>> 17) | (tmp1 << 15);
         tmp2 = (tmp2 >>> 19) | (tmp2 << 13);
         s1 = tmp1 ^ tmp2 ^ (w[j - 2] >>> 10);
-        w[j] = (w[j - 16] + s0 + w[j - 7] + s1) << 0;
+        w[j] = w[j - 16] + s0 + w[j - 7] + s1 << 0;
       }
 
+      bc = b & c;
       for(j = 0;j < 64;j += 4) {
         tmp1 = (a >>> 2) | (a << 30);
         tmp2 = (a >>> 13) | (a << 19);
@@ -86,12 +92,13 @@
         tmp2 = (e >>> 11) | (e << 21);
         tmp3 = (e >>> 25) | (e << 7);
         s1 = tmp1 ^ tmp2 ^ tmp3;
-        maj = (a & b) ^ (a & c) ^ (b & c);
+        ab = a & b;
+        maj = ab ^ (a & c) ^ bc;
         ch = (e & f) ^ (~e & g);
-        t1 = (h + s1 + ch + K[j + 0] + w[j + 0]) << 0;
-        t2 = (s0 + maj) << 0;
-        h = (d + t1) << 0;
-        d = (t1 + t2) << 0;
+        t1 = h + s1 + ch + K[j] + w[j] << 0;
+        t2 = s0 + maj << 0;
+        h = d + t1 << 0;
+        d = t1 + t2 << 0;
         tmp1 = (d >>> 2) | (d << 30);
         tmp2 = (d >>> 13) | (d << 19);
         tmp3 = (d >>> 22) | (d << 10);
@@ -100,12 +107,13 @@
         tmp2 = (h >>> 11) | (h << 21);
         tmp3 = (h >>> 25) | (h << 7);
         s1 = tmp1 ^ tmp2 ^ tmp3;
-        maj = (d & a) ^ (d & b) ^ (a & b);
+        da = d & a;
+        maj = da ^ (d & b) ^ ab;
         ch = (h & e) ^ (~h & f);
-        t1 = (g + s1 + ch + K[j + 1] + w[j + 1]) << 0;
-        t2 = (s0 + maj) << 0;
-        g = (c + t1) << 0;
-        c = (t1 + t2) << 0;
+        t1 = g + s1 + ch + K[j + 1] + w[j + 1] << 0;
+        t2 = s0 + maj << 0;
+        g = c + t1 << 0;
+        c = t1 + t2 << 0;
         tmp1 = (c >>> 2) | (c << 30);
         tmp2 = (c >>> 13) | (c << 19);
         tmp3 = (c >>> 22) | (c << 10);
@@ -114,12 +122,13 @@
         tmp2 = (g >>> 11) | (g << 21);
         tmp3 = (g >>> 25) | (g << 7);
         s1 = tmp1 ^ tmp2 ^ tmp3;
-        maj = (c & d) ^ (c & a) ^ (d & a);
+        cd = c & d;
+        maj = cd ^ (c & a) ^ da;
         ch = (g & h) ^ (~g & e);
-        t1 = (f + s1 + ch + K[j + 2] + w[j + 2]) << 0;
-        t2 = (s0 + maj) << 0;
-        f = (b + t1) << 0;
-        b = (t1 + t2) << 0;
+        t1 = f + s1 + ch + K[j + 2] + w[j + 2] << 0;
+        t2 = s0 + maj << 0;
+        f = b + t1 << 0;
+        b = t1 + t2 << 0;
         tmp1 = (b >>> 2) | (b << 30);
         tmp2 = (b >>> 13) | (b << 19);
         tmp3 = (b >>> 22) | (b << 10);
@@ -128,36 +137,58 @@
         tmp2 = (f >>> 11) | (f << 21);
         tmp3 = (f >>> 25) | (f << 7);
         s1 = tmp1 ^ tmp2 ^ tmp3;
-        maj = (b & c) ^ (b & d) ^ (c & d);
+        bc = b & c;
+        maj = bc ^ (b & d) ^ cd;
         ch = (f & g) ^ (~f & h);
-        t1 = (e + s1 + ch + K[j + 3] + w[j + 3]) << 0;
-        t2 = (s0 + maj) << 0;
-        e = (a + t1) << 0;
-        a = (t1 + t2) << 0;
+        t1 = e + s1 + ch + K[j + 3] + w[j + 3] << 0;
+        t2 = s0 + maj << 0;
+        e = a + t1 << 0;
+        a = t1 + t2 << 0;
       }
 
-      h0 = (h0 + a) << 0;
-      h1 = (h1 + b) << 0;
-      h2 = (h2 + c) << 0;
-      h3 = (h3 + d) << 0;
-      h4 = (h4 + e) << 0;
-      h5 = (h5 + f) << 0;
-      h6 = (h6 + g) << 0;
-      h7 = (h7 + h) << 0;
+      h0 = h0 + a << 0;
+      h1 = h1 + b << 0;
+      h2 = h2 + c << 0;
+      h3 = h3 + d << 0;
+      h4 = h4 + e << 0;
+      h5 = h5 + f << 0;
+      h6 = h6 + g << 0;
+      h7 = h7 + h << 0;
     }
 
-    var hex = toHexString(h0) + toHexString(h1)+ toHexString(h2) + toHexString(h3) + toHexString(h4) + toHexString(h5) + toHexString(h6);
+    var hex = HEX_CHARS[(h0 >> 28) & 0x0F] + HEX_CHARS[(h0 >> 24) & 0x0F] +
+              HEX_CHARS[(h0 >> 20) & 0x0F] + HEX_CHARS[(h0 >> 16) & 0x0F] +
+              HEX_CHARS[(h0 >> 12) & 0x0F] + HEX_CHARS[(h0 >> 8) & 0x0F] +
+              HEX_CHARS[(h0 >> 4) & 0x0F] + HEX_CHARS[h0 & 0x0F] +
+              HEX_CHARS[(h1 >> 28) & 0x0F] + HEX_CHARS[(h1 >> 24) & 0x0F] +
+              HEX_CHARS[(h1 >> 20) & 0x0F] + HEX_CHARS[(h1 >> 16) & 0x0F] +
+              HEX_CHARS[(h1 >> 12) & 0x0F] + HEX_CHARS[(h1 >> 8) & 0x0F] +
+              HEX_CHARS[(h1 >> 4) & 0x0F] + HEX_CHARS[h1 & 0x0F] +
+              HEX_CHARS[(h2 >> 28) & 0x0F] + HEX_CHARS[(h2 >> 24) & 0x0F] +
+              HEX_CHARS[(h2 >> 20) & 0x0F] + HEX_CHARS[(h2 >> 16) & 0x0F] +
+              HEX_CHARS[(h2 >> 12) & 0x0F] + HEX_CHARS[(h2 >> 8) & 0x0F] +
+              HEX_CHARS[(h2 >> 4) & 0x0F] + HEX_CHARS[h2 & 0x0F] +
+              HEX_CHARS[(h3 >> 28) & 0x0F] + HEX_CHARS[(h3 >> 24) & 0x0F] +
+              HEX_CHARS[(h3 >> 20) & 0x0F] + HEX_CHARS[(h3 >> 16) & 0x0F] +
+              HEX_CHARS[(h3 >> 12) & 0x0F] + HEX_CHARS[(h3 >> 8) & 0x0F] +
+              HEX_CHARS[(h3 >> 4) & 0x0F] + HEX_CHARS[h3 & 0x0F] +
+              HEX_CHARS[(h4 >> 28) & 0x0F] + HEX_CHARS[(h4 >> 24) & 0x0F] +
+              HEX_CHARS[(h4 >> 20) & 0x0F] + HEX_CHARS[(h4 >> 16) & 0x0F] +
+              HEX_CHARS[(h4 >> 12) & 0x0F] + HEX_CHARS[(h4 >> 8) & 0x0F] +
+              HEX_CHARS[(h4 >> 4) & 0x0F] + HEX_CHARS[h4 & 0x0F] +
+              HEX_CHARS[(h5 >> 28) & 0x0F] + HEX_CHARS[(h5 >> 24) & 0x0F] +
+              HEX_CHARS[(h5 >> 20) & 0x0F] + HEX_CHARS[(h5 >> 16) & 0x0F] +
+              HEX_CHARS[(h5 >> 12) & 0x0F] + HEX_CHARS[(h5 >> 8) & 0x0F] +
+              HEX_CHARS[(h5 >> 4) & 0x0F] + HEX_CHARS[h5 & 0x0F] +
+              HEX_CHARS[(h6 >> 28) & 0x0F] + HEX_CHARS[(h6 >> 24) & 0x0F] +
+              HEX_CHARS[(h6 >> 20) & 0x0F] + HEX_CHARS[(h6 >> 16) & 0x0F] +
+              HEX_CHARS[(h6 >> 12) & 0x0F] + HEX_CHARS[(h6 >> 8) & 0x0F] +
+              HEX_CHARS[(h6 >> 4) & 0x0F] + HEX_CHARS[h6 & 0x0F];
     if(is256) {
-      hex += toHexString(h7);
-    }
-    return hex;
-  };
-
-  var toHexString = function(num) {
-    var hex = '';
-    for(var i = 0; i < 4; i++) {
-      var offset = 3 - i << 3;
-      hex += HEX_CHARS[(num >> (offset + 4)) & 0x0F] + HEX_CHARS[(num >> offset) & 0x0F];
+      hex += HEX_CHARS[(h7 >> 28) & 0x0F] + HEX_CHARS[(h7 >> 24) & 0x0F] +
+             HEX_CHARS[(h7 >> 20) & 0x0F] + HEX_CHARS[(h7 >> 16) & 0x0F] +
+             HEX_CHARS[(h7 >> 12) & 0x0F] + HEX_CHARS[(h7 >> 8) & 0x0F] +
+             HEX_CHARS[(h7 >> 4) & 0x0F] + HEX_CHARS[h7 & 0x0F];
     }
     return hex;
   };
@@ -196,9 +227,9 @@
     }
     for(i = 0;i < length;++i) {
       blocks = chunks[i >> 6];
-      blocks[(i & 63) >> 2] |= message.charCodeAt(i) << (3 - (i & 3) << 3);
+      blocks[(i & 63) >> 2] |= message.charCodeAt(i) << SHIFT[i & 3];
     }
-    blocks[(i & 63) >> 2] |= 0x80 << (3 - (i & 3) << 3);
+    blocks[(i & 63) >> 2] |= 0x80 << SHIFT[i & 3];
     blocks[15] = length << 3; // length * 8
     return chunks;
   };
@@ -214,14 +245,14 @@
     }
     for(i = 0;i < length;++i) {
       blocks = chunks[i >> 6];
-      blocks[(i & 63) >> 2] |= bytes[i] << (3 - (i & 3) << 3);
+      blocks[(i & 63) >> 2] |= bytes[i] << SHIFT[i & 3];
     }
-    blocks[(i & 63) >> 2] |= 0x80 << (3 - (i & 3) << 3);
+    blocks[(i & 63) >> 2] |= 0x80 << SHIFT[i & 3];
     blocks[15] = length << 3; // length * 8
     return chunks;
   };
 
-  if(typeof(module) != 'undefined') {
+  if(!root.JS_SHA256_TEST && NODE_JS) {
     sha256.sha256 = sha256;
     sha256.sha224 = sha224;
     module.exports = sha256;
