@@ -95,8 +95,8 @@ Output
     dfbab71afdf54388af4d55f8bd3de8c9b15e0eb916bf9125f4a959d4
 
 ## Benchmark
-[ASCII](http://jsperf.com/sha256-ascii/)  
-[UTF8](http://jsperf.com/sha256-utf8/)
+[UTF8](http://jsperf.com/sha256/64)  
+[ASCII](http://jsperf.com/sha256-ascii/)
 
 ## Extensions
 ### jQuery
