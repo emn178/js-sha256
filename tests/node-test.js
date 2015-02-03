@@ -9,6 +9,5 @@ sha256 = null;
 sha224 = null;
 
 JS_SHA256_TEST = true;
-testName = 'without ArrayBuffer';
 require('../src/sha256.js');
 require('./test.js');

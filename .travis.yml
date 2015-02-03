@@ -3,13 +3,11 @@ node_js:
   - "0.11"
   - "0.10"
   - "0.8"
-install:
+before_install:
   - npm install mocha -g
   - npm install coveralls -g
   - npm install mocha-lcov-reporter -g
-  - npm install
-script:
-  - npm run-script coveralls
+script: npm run-script coveralls
 branches:
   only:
     - master

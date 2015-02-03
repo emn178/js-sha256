@@ -1,6 +1,6 @@
 {
   "name": "js-sha256",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "main": ["build/sha256.min.js"],
   "ignore": [
     "samples",

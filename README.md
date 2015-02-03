@@ -1,6 +1,6 @@
 # js-sha256
-[![Build Status](https://api.travis-ci.org/emn178/js-sha256.png?branch=master)](https://travis-ci.org/emn178/js-sha256?branch=master)
-[![Build Status](https://coveralls.io/repos/emn178/js-sha256/badge.png?branch=master)](https://coveralls.io/r/emn178/js-sha256?branch=master)  
+[![Build Status](https://travis-ci.org/emn178/js-sha256.svg?branch=master)](https://travis-ci.org/emn178/js-sha256)
+[![Coverage Status](https://coveralls.io/repos/emn178/js-sha256/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha256?branch=master)  
 [![NPM](https://nodei.co/npm/js-sha256.png?stars&downloads)](https://nodei.co/npm/js-sha256/)  
 A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 
@@ -37,41 +37,15 @@ sha256 = require('js-sha256').sha256;
 sha224 = require('js-sha256').sha224;
 ```
 
-### Methods
-
-#### sha256(str, asciiOnly)
-
-Hash string to sha256, set asciiOnly to true for better performace if you ensure input is ascii.
-
-##### *str: `String`*
-
-String to hash.
-
-##### *asciiOnly: `Boolean` (default: `false`)*
-
-Specify the string encoding is ASCII.
-
-#### sha224(str, asciiOnly)
-
-Hash string to sha224, set asciiOnly to true for better performace if you ensure input is ascii.
-
-##### *str: `String`*
-
-String to hash.
-
-##### *asciiOnly: `Boolean` (default: `false`)*
-
-Specify the string encoding is ASCII.
-
 ## Example
 Code
 ```JavaScript
 sha256('');
-sha256('The quick brown fox jumps over the lazy dog', true);
-sha256('The quick brown fox jumps over the lazy dog.', true);
+sha256('The quick brown fox jumps over the lazy dog');
+sha256('The quick brown fox jumps over the lazy dog.');
 sha224('');
-sha224('The quick brown fox jumps over the lazy dog', true);
-sha224('The quick brown fox jumps over the lazy dog.', true);
+sha224('The quick brown fox jumps over the lazy dog');
+sha224('The quick brown fox jumps over the lazy dog.');
 ```
 Output
 
