@@ -1,5 +1,5 @@
 /*
- * js-sha256 v0.2.0
+ * js-sha256 v0.2.1
  * https://github.com/emn178/js-sha256
  *
  * Copyright 2014-2015, emn178@gmail.com
@@ -86,13 +86,13 @@
           blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
         }
       }
-      blocks[64] = blocks[16];
       bytes += i - start;
       start = i - 64;
       if(index == length) {
         blocks[i >> 2] |= EXTRA[i & 3];
         ++index;
       }
+      blocks[64] = blocks[16];
       if(index > length && i < 56) {
         blocks[15] = bytes << 3;
         end = true;

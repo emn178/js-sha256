@@ -1,3 +1,8 @@
+# v0.2.1 / 2015-02-05
+
+* Fixed special length bug.
+* Add test cases.
+
 # v0.2.0 / 2015-02-03
 
 * Remove ascii parameter.
