@@ -37,9 +37,9 @@
   };
 
   var sha2 = function(message, is256) {
-    var h0, h1, h2, h3, h4, h5, h6, h7, code, end = false,
+    var h0, h1, h2, h3, h4, h5, h6, h7, block, code, first = true, end = false,
         i, j, index = 0, start = 0, bytes = 0, length = message.length,
-        s0, s1, tmp1, tmp2, tmp3, maj, t1, t2, ch, ab, da, cd, bc;
+        s0, s1, maj, t1, t2, ch, ab, da, cd, bc;
 
     if(is256) {
       h0 = 0x6a09e667;
@@ -60,9 +60,9 @@
       h6 = 0x64f98fa7;
       h7 = 0xbefa4fa4;
     }
-    blocks[64] = 0;
+    block = 0;
     do {
-      blocks[0] = blocks[64];
+      blocks[0] = block;
       blocks[16] = blocks[1] = blocks[2] = blocks[3] =
       blocks[4] = blocks[5] = blocks[6] = blocks[7] =
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
@@ -92,7 +92,7 @@
         blocks[i >> 2] |= EXTRA[i & 3];
         ++index;
       }
-      blocks[64] = blocks[16];
+      block = blocks[16];
       if(index > length && i < 56) {
         blocks[15] = bytes << 3;
         end = true;
@@ -101,42 +101,41 @@
       var a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
       for(j = 16;j < 64;++j) {
         // rightrotate
-        tmp1 = tmp2 = blocks[j - 15];
-        tmp1 = (tmp1 >>> 7) | (tmp1 << 25);
-        tmp2 = (tmp2 >>> 18) | (tmp2 << 14);
-        s0 = tmp1 ^ tmp2 ^ (blocks[j - 15] >>> 3);
-        tmp1 = tmp2 = blocks[j - 2];
-        tmp1 = (tmp1 >>> 17) | (tmp1 << 15);
-        tmp2 = (tmp2 >>> 19) | (tmp2 << 13);
-        s1 = tmp1 ^ tmp2 ^ (blocks[j - 2] >>> 10);
+        t1 = blocks[j - 15];
+        s0 = ((t1 >>> 7) | (t1 << 25)) ^ ((t1 >>> 18) | (t1 << 14)) ^ (t1 >>> 3);
+        t1 = blocks[j - 2];
+        s1 = ((t1 >>> 17) | (t1 << 15)) ^ ((t1 >>> 19) | (t1 << 13)) ^ (t1 >>> 10);
         blocks[j] = blocks[j - 16] + s0 + blocks[j - 7] + s1 << 0;
       }
 
       bc = b & c;
       for(j = 0;j < 64;j += 4) {
-        tmp1 = (a >>> 2) | (a << 30);
-        tmp2 = (a >>> 13) | (a << 19);
-        tmp3 = (a >>> 22) | (a << 10);
-        s0 = tmp1 ^ tmp2 ^ tmp3;
-        tmp1 = (e >>> 6) | (e << 26);
-        tmp2 = (e >>> 11) | (e << 21);
-        tmp3 = (e >>> 25) | (e << 7);
-        s1 = tmp1 ^ tmp2 ^ tmp3;
-        ab = a & b;
-        maj = ab ^ (a & c) ^ bc;
-        ch = (e & f) ^ (~e & g);
-        t1 = h + s1 + ch + K[j] + blocks[j] << 0;
-        t2 = s0 + maj << 0;
-        h = d + t1 << 0;
-        d = t1 + t2 << 0;
-        tmp1 = (d >>> 2) | (d << 30);
-        tmp2 = (d >>> 13) | (d << 19);
-        tmp3 = (d >>> 22) | (d << 10);
-        s0 = tmp1 ^ tmp2 ^ tmp3;
-        tmp1 = (h >>> 6) | (h << 26);
-        tmp2 = (h >>> 11) | (h << 21);
-        tmp3 = (h >>> 25) | (h << 7);
-        s1 = tmp1 ^ tmp2 ^ tmp3;
+        if(first) {
+          if(is256) {
+            ab = 704751109;
+            t1 = blocks[0] - 210244248 << 0;
+            h = t1 - 1521486534 << 0;
+            d = t1 + 143694565 << 0;
+          } else {
+            ab = 300032;
+            t1 = blocks[0] - 1413257819 << 0;
+            h = t1 - 150054599 << 0;
+            d = t1 + 24177077 << 0;
+          }
+          first = false;
+        } else {
+          s0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+          s1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+          ab = a & b;
+          maj = ab ^ (a & c) ^ bc;
+          ch = (e & f) ^ (~e & g);
+          t1 = h + s1 + ch + K[j] + blocks[j] << 0;
+          t2 = s0 + maj << 0;
+          h = d + t1 << 0;
+          d = t1 + t2 << 0;
+        }
+        s0 = ((d >>> 2) | (d << 30)) ^ ((d >>> 13) | (d << 19)) ^ ((d >>> 22) | (d << 10));
+        s1 = ((h >>> 6) | (h << 26)) ^ ((h >>> 11) | (h << 21)) ^ ((h >>> 25) | (h << 7));
         da = d & a;
         maj = da ^ (d & b) ^ ab;
         ch = (h & e) ^ (~h & f);
@@ -144,14 +143,8 @@
         t2 = s0 + maj << 0;
         g = c + t1 << 0;
         c = t1 + t2 << 0;
-        tmp1 = (c >>> 2) | (c << 30);
-        tmp2 = (c >>> 13) | (c << 19);
-        tmp3 = (c >>> 22) | (c << 10);
-        s0 = tmp1 ^ tmp2 ^ tmp3;
-        tmp1 = (g >>> 6) | (g << 26);
-        tmp2 = (g >>> 11) | (g << 21);
-        tmp3 = (g >>> 25) | (g << 7);
-        s1 = tmp1 ^ tmp2 ^ tmp3;
+        s0 = ((c >>> 2) | (c << 30)) ^ ((c >>> 13) | (c << 19)) ^ ((c >>> 22) | (c << 10));
+        s1 = ((g >>> 6) | (g << 26)) ^ ((g >>> 11) | (g << 21)) ^ ((g >>> 25) | (g << 7));
         cd = c & d;
         maj = cd ^ (c & a) ^ da;
         ch = (g & h) ^ (~g & e);
@@ -159,14 +152,8 @@
         t2 = s0 + maj << 0;
         f = b + t1 << 0;
         b = t1 + t2 << 0;
-        tmp1 = (b >>> 2) | (b << 30);
-        tmp2 = (b >>> 13) | (b << 19);
-        tmp3 = (b >>> 22) | (b << 10);
-        s0 = tmp1 ^ tmp2 ^ tmp3;
-        tmp1 = (f >>> 6) | (f << 26);
-        tmp2 = (f >>> 11) | (f << 21);
-        tmp3 = (f >>> 25) | (f << 7);
-        s1 = tmp1 ^ tmp2 ^ tmp3;
+        s0 = ((b >>> 2) | (b << 30)) ^ ((b >>> 13) | (b << 19)) ^ ((b >>> 22) | (b << 10));
+        s1 = ((f >>> 6) | (f << 26)) ^ ((f >>> 11) | (f << 21)) ^ ((f >>> 25) | (f << 7));
         bc = b & c;
         maj = bc ^ (b & d) ^ cd;
         ch = (f & g) ^ (~f & h);
