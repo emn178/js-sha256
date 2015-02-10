@@ -1,5 +1,5 @@
 /*
- * js-sha256 v0.2.1
+ * js-sha256 v0.2.2
  * https://github.com/emn178/js-sha256
  *
  * Copyright 2014-2015, emn178@gmail.com
@@ -28,29 +28,16 @@
 
   var blocks = [];
 
-  var sha256 = function(message) {
-    return sha2(message, true);
-  };
-
   var sha224 = function(message) {
-    return sha2(message, false);
+    return sha256(message, true);
   };
 
-  var sha2 = function(message, is256) {
+  var sha256 = function(message, is224) {
     var h0, h1, h2, h3, h4, h5, h6, h7, block, code, first = true, end = false,
         i, j, index = 0, start = 0, bytes = 0, length = message.length,
         s0, s1, maj, t1, t2, ch, ab, da, cd, bc;
 
-    if(is256) {
-      h0 = 0x6a09e667;
-      h1 = 0xbb67ae85;
-      h2 = 0x3c6ef372;
-      h3 = 0xa54ff53a;
-      h4 = 0x510e527f;
-      h5 = 0x9b05688c;
-      h6 = 0x1f83d9ab;
-      h7 = 0x5be0cd19;
-    } else { // 224
+    if(is224) {
       h0 = 0xc1059ed8;
       h1 = 0x367cd507;
       h2 = 0x3070dd17;
@@ -59,6 +46,15 @@
       h5 = 0x68581511;
       h6 = 0x64f98fa7;
       h7 = 0xbefa4fa4;
+    } else { // 256
+      h0 = 0x6a09e667;
+      h1 = 0xbb67ae85;
+      h2 = 0x3c6ef372;
+      h3 = 0xa54ff53a;
+      h4 = 0x510e527f;
+      h5 = 0x9b05688c;
+      h6 = 0x1f83d9ab;
+      h7 = 0x5be0cd19;
     }
     block = 0;
     do {
@@ -111,16 +107,16 @@
       bc = b & c;
       for(j = 0;j < 64;j += 4) {
         if(first) {
-          if(is256) {
-            ab = 704751109;
-            t1 = blocks[0] - 210244248 << 0;
-            h = t1 - 1521486534 << 0;
-            d = t1 + 143694565 << 0;
-          } else {
+          if(is224) {
             ab = 300032;
-            t1 = blocks[0] - 1413257819 << 0;
+            t1 = blocks[0] - 1413257819;
             h = t1 - 150054599 << 0;
             d = t1 + 24177077 << 0;
+          } else {
+            ab = 704751109;
+            t1 = blocks[0] - 210244248;
+            h = t1 - 1521486534 << 0;
+            d = t1 + 143694565 << 0;
           }
           first = false;
         } else {
@@ -129,8 +125,8 @@
           ab = a & b;
           maj = ab ^ (a & c) ^ bc;
           ch = (e & f) ^ (~e & g);
-          t1 = h + s1 + ch + K[j] + blocks[j] << 0;
-          t2 = s0 + maj << 0;
+          t1 = h + s1 + ch + K[j] + blocks[j];
+          t2 = s0 + maj;
           h = d + t1 << 0;
           d = t1 + t2 << 0;
         }
@@ -139,8 +135,8 @@
         da = d & a;
         maj = da ^ (d & b) ^ ab;
         ch = (h & e) ^ (~h & f);
-        t1 = g + s1 + ch + K[j + 1] + blocks[j + 1] << 0;
-        t2 = s0 + maj << 0;
+        t1 = g + s1 + ch + K[j + 1] + blocks[j + 1];
+        t2 = s0 + maj;
         g = c + t1 << 0;
         c = t1 + t2 << 0;
         s0 = ((c >>> 2) | (c << 30)) ^ ((c >>> 13) | (c << 19)) ^ ((c >>> 22) | (c << 10));
@@ -148,8 +144,8 @@
         cd = c & d;
         maj = cd ^ (c & a) ^ da;
         ch = (g & h) ^ (~g & e);
-        t1 = f + s1 + ch + K[j + 2] + blocks[j + 2] << 0;
-        t2 = s0 + maj << 0;
+        t1 = f + s1 + ch + K[j + 2] + blocks[j + 2];
+        t2 = s0 + maj;
         f = b + t1 << 0;
         b = t1 + t2 << 0;
         s0 = ((b >>> 2) | (b << 30)) ^ ((b >>> 13) | (b << 19)) ^ ((b >>> 22) | (b << 10));
@@ -157,8 +153,8 @@
         bc = b & c;
         maj = bc ^ (b & d) ^ cd;
         ch = (f & g) ^ (~f & h);
-        t1 = e + s1 + ch + K[j + 3] + blocks[j + 3] << 0;
-        t2 = s0 + maj << 0;
+        t1 = e + s1 + ch + K[j + 3] + blocks[j + 3];
+        t2 = s0 + maj;
         e = a + t1 << 0;
         a = t1 + t2 << 0;
       }
@@ -201,7 +197,7 @@
               HEX_CHARS[(h6 >> 20) & 0x0F] + HEX_CHARS[(h6 >> 16) & 0x0F] +
               HEX_CHARS[(h6 >> 12) & 0x0F] + HEX_CHARS[(h6 >> 8) & 0x0F] +
               HEX_CHARS[(h6 >> 4) & 0x0F] + HEX_CHARS[h6 & 0x0F];
-    if(is256) {
+    if(!is224) {
       hex += HEX_CHARS[(h7 >> 28) & 0x0F] + HEX_CHARS[(h7 >> 24) & 0x0F] +
              HEX_CHARS[(h7 >> 20) & 0x0F] + HEX_CHARS[(h7 >> 16) & 0x0F] +
              HEX_CHARS[(h7 >> 12) & 0x0F] + HEX_CHARS[(h7 >> 8) & 0x0F] +
