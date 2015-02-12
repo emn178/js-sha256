@@ -68,6 +68,18 @@ Output
     72726d8818f693066ceb69afa364218b692e62ea92b385782363780f47529c21
     dfbab71afdf54388af4d55f8bd3de8c9b15e0eb916bf9125f4a959d4
 
+It also supports byte Array or Uint8Array input:
+
+Code
+```JavaScript
+sha256([]);
+sha256(new Uint8Array([211, 212]));
+```
+Output
+
+    e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f
+
 ## Benchmark
 [UTF8](http://jsperf.com/sha256/66)  
 [ASCII](http://jsperf.com/sha256/65)

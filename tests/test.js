@@ -41,6 +41,24 @@ describe('sha256', function() {
       expect(sha256('012345678012345678012345678012345678012345678012345678012345678012345678')).to.be('6fba9e623ae6abf028a1b195748814aa95eebfb22e3ec5e15d2444cd6c48186a');
     });
   });
+
+  describe('Array', function() {
+    describe('Array', function() {
+      it('should be successful', function() {
+        expect(sha256([])).to.be('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+        expect(sha256([211, 212])).to.be('182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f');
+        expect(sha256([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])).to.be('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592');
+        expect(sha256([48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55, 56, 48, 49, 50, 51, 52, 53, 54, 55])).to.be('74b51c6911f9a8b5e7c499effe7604e43b672166818873c27752c248de434841');
+      });
+    });
+
+    describe('Uint8Array', function() {
+      it('should be successful', function() {
+        expect(sha256(new Uint8Array([]))).to.be('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+        expect(sha256(new Uint8Array([211, 212]))).to.be('182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f');
+      });
+    });
+  });
 });
 
 describe('sha224', function() {

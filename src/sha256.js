@@ -1,5 +1,5 @@
 /*
- * js-sha256 v0.2.2
+ * js-sha256 v0.2.3
  * https://github.com/emn178/js-sha256
  *
  * Copyright 2014-2015, emn178@gmail.com
@@ -14,6 +14,7 @@
   if(NODE_JS) {
     root = global;
   }
+  var TYPED_ARRAY = typeof(Uint8Array) != 'undefined';
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -27,6 +28,11 @@
           0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
 
   var blocks = [];
+
+  Array.prototype.__ARRAY__ = true;
+  if(TYPED_ARRAY) {
+    Uint8Array.prototype.__ARRAY__ = true;
+  }
 
   var sha224 = function(message) {
     return sha256(message, true);
@@ -63,23 +69,29 @@
       blocks[4] = blocks[5] = blocks[6] = blocks[7] =
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
       blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
-      for (i = start;index < length && i < 64; ++index) {
-        code = message.charCodeAt(index);
-        if (code < 0x80) {
-          blocks[i >> 2] |= code << SHIFT[i++ & 3];
-        } else if (code < 0x800) {
-          blocks[i >> 2] |= (0xc0 | (code >> 6)) << SHIFT[i++ & 3];
-          blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
-        } else if (code < 0xd800 || code >= 0xe000) {
-          blocks[i >> 2] |= (0xe0 | (code >> 12)) << SHIFT[i++ & 3];
-          blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
-          blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
-        } else {
-          code = 0x10000 + (((code & 0x3ff) << 10) | (message.charCodeAt(++index) & 0x3ff));
-          blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
-          blocks[i >> 2] |= (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];
-          blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
-          blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+      if(message.__ARRAY__) {
+        for (i = start;index < length && i < 64; ++index) {
+          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
+        }
+      } else {
+        for (i = start;index < length && i < 64; ++index) {
+          code = message.charCodeAt(index);
+          if (code < 0x80) {
+            blocks[i >> 2] |= code << SHIFT[i++ & 3];
+          } else if (code < 0x800) {
+            blocks[i >> 2] |= (0xc0 | (code >> 6)) << SHIFT[i++ & 3];
+            blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+          } else if (code < 0xd800 || code >= 0xe000) {
+            blocks[i >> 2] |= (0xe0 | (code >> 12)) << SHIFT[i++ & 3];
+            blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
+            blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+          } else {
+            code = 0x10000 + (((code & 0x3ff) << 10) | (message.charCodeAt(++index) & 0x3ff));
+            blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
+            blocks[i >> 2] |= (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];
+            blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
+            blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+          }
         }
       }
       bytes += i - start;

@@ -1,3 +1,7 @@
+# v0.2.3 / 2015-02-11
+
+* Support byte array input.
+
 # v0.2.2 / 2015-02-10
 
 * Improve performance.
