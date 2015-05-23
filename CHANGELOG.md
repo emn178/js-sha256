@@ -1,3 +1,7 @@
+# v0.3.0 / 2015-05-23
+
+* Support ArrayBuffer input.
+
 # v0.2.3 / 2015-02-11
 
 * Support byte array input.

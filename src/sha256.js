@@ -1,5 +1,5 @@
 /*
- * js-sha256 v0.2.3
+ * js-sha256 v0.3.0
  * https://github.com/emn178/js-sha256
  *
  * Copyright 2014-2015, emn178@gmail.com
@@ -29,16 +29,16 @@
 
   var blocks = [];
 
-  Array.prototype.__ARRAY__ = true;
-  if(TYPED_ARRAY) {
-    Uint8Array.prototype.__ARRAY__ = true;
-  }
-
   var sha224 = function(message) {
     return sha256(message, true);
   };
 
   var sha256 = function(message, is224) {
+    var notString = typeof(message) != 'string';
+    if(notString && message.constructor == root.ArrayBuffer) {
+      message = new Uint8Array(message);
+    }
+
     var h0, h1, h2, h3, h4, h5, h6, h7, block, code, first = true, end = false,
         i, j, index = 0, start = 0, bytes = 0, length = message.length,
         s0, s1, maj, t1, t2, ch, ab, da, cd, bc;
@@ -69,7 +69,7 @@
       blocks[4] = blocks[5] = blocks[6] = blocks[7] =
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
       blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
-      if(message.__ARRAY__) {
+      if(notString) {
         for (i = start;index < length && i < 64; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
