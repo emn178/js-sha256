@@ -1,3 +1,8 @@
+# v0.3.1 / 2016-09-08
+
+* Added some files to npm package.
+* Updated coding style.
+
 # v0.3.0 / 2015-05-23
 
 * Support ArrayBuffer input.

@@ -1,20 +1,19 @@
-/*
- * js-sha256 v0.3.0
- * https://github.com/emn178/js-sha256
+/**
+ * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * Copyright 2014-2015, emn178@gmail.com
- *
- * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * @version 0.3.1
+ * @author Chen, Yi-Cyuan [emn178@gmail.com]
+ * @copyright Chen, Yi-Cyuan 2014-2016
+ * @license MIT
  */
-;(function(root, undefined) {
+(function (root) {
   'use strict';
 
-  var NODE_JS = typeof(module) != 'undefined';
-  if(NODE_JS) {
+  var NODE_JS = typeof process == 'object' && process.versions && process.versions.node;
+  if (NODE_JS) {
     root = global;
   }
-  var TYPED_ARRAY = typeof(Uint8Array) != 'undefined';
+  var TYPED_ARRAY = typeof Uint8Array != 'undefined';
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -29,13 +28,13 @@
 
   var blocks = [];
 
-  var sha224 = function(message) {
+  var sha224 = function (message) {
     return sha256(message, true);
   };
 
-  var sha256 = function(message, is224) {
-    var notString = typeof(message) != 'string';
-    if(notString && message.constructor == root.ArrayBuffer) {
+  var sha256 = function (message, is224) {
+    var notString = typeof message != 'string';
+    if (notString && message.constructor == root.ArrayBuffer) {
       message = new Uint8Array(message);
     }
 
@@ -43,7 +42,7 @@
         i, j, index = 0, start = 0, bytes = 0, length = message.length,
         s0, s1, maj, t1, t2, ch, ab, da, cd, bc;
 
-    if(is224) {
+    if (is224) {
       h0 = 0xc1059ed8;
       h1 = 0x367cd507;
       h2 = 0x3070dd17;
@@ -69,12 +68,12 @@
       blocks[4] = blocks[5] = blocks[6] = blocks[7] =
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
       blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
-      if(notString) {
-        for (i = start;index < length && i < 64; ++index) {
+      if (notString) {
+        for (i = start;index < length && i < 64;++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       } else {
-        for (i = start;index < length && i < 64; ++index) {
+        for (i = start;index < length && i < 64;++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
             blocks[i >> 2] |= code << SHIFT[i++ & 3];
@@ -96,18 +95,18 @@
       }
       bytes += i - start;
       start = i - 64;
-      if(index == length) {
+      if (index == length) {
         blocks[i >> 2] |= EXTRA[i & 3];
         ++index;
       }
       block = blocks[16];
-      if(index > length && i < 56) {
+      if (index > length && i < 56) {
         blocks[15] = bytes << 3;
         end = true;
       }
 
       var a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
-      for(j = 16;j < 64;++j) {
+      for (j = 16;j < 64;++j) {
         // rightrotate
         t1 = blocks[j - 15];
         s0 = ((t1 >>> 7) | (t1 << 25)) ^ ((t1 >>> 18) | (t1 << 14)) ^ (t1 >>> 3);
@@ -117,9 +116,9 @@
       }
 
       bc = b & c;
-      for(j = 0;j < 64;j += 4) {
-        if(first) {
-          if(is224) {
+      for (j = 0;j < 64;j += 4) {
+        if (first) {
+          if (is224) {
             ab = 300032;
             t1 = blocks[0] - 1413257819;
             h = t1 - 150054599 << 0;
@@ -179,7 +178,7 @@
       h5 = h5 + f << 0;
       h6 = h6 + g << 0;
       h7 = h7 + h << 0;
-    } while(!end);
+    } while (!end);
 
     var hex = HEX_CHARS[(h0 >> 28) & 0x0F] + HEX_CHARS[(h0 >> 24) & 0x0F] +
               HEX_CHARS[(h0 >> 20) & 0x0F] + HEX_CHARS[(h0 >> 16) & 0x0F] +
@@ -209,7 +208,7 @@
               HEX_CHARS[(h6 >> 20) & 0x0F] + HEX_CHARS[(h6 >> 16) & 0x0F] +
               HEX_CHARS[(h6 >> 12) & 0x0F] + HEX_CHARS[(h6 >> 8) & 0x0F] +
               HEX_CHARS[(h6 >> 4) & 0x0F] + HEX_CHARS[h6 & 0x0F];
-    if(!is224) {
+    if (!is224) {
       hex += HEX_CHARS[(h7 >> 28) & 0x0F] + HEX_CHARS[(h7 >> 24) & 0x0F] +
              HEX_CHARS[(h7 >> 20) & 0x0F] + HEX_CHARS[(h7 >> 16) & 0x0F] +
              HEX_CHARS[(h7 >> 12) & 0x0F] + HEX_CHARS[(h7 >> 8) & 0x0F] +
@@ -218,11 +217,11 @@
     return hex;
   };
   
-  if(!root.JS_SHA256_TEST && NODE_JS) {
+  if (!root.JS_SHA256_TEST && NODE_JS) {
     sha256.sha256 = sha256;
     sha256.sha224 = sha224;
     module.exports = sha256;
-  } else if(root) {
+  } else if (root) {
     root.sha256 = sha256;
     root.sha224 = sha224;
   }

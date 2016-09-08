@@ -1,9 +1,10 @@
 {
   "name": "js-sha256",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha256.js",
   "devDependencies": {
+    "mocha": "~2.3.4",
     "expect.js": "~0.3.1",
     "jscoverage": "~0.5.9"
   },
@@ -26,7 +27,7 @@
     "HMAC"
   ],
   "license": "MIT",
-  "author": "emn178 <emn178@gmail.com>",
+  "author": "Chen, Yi-Cyuan <emn178@gmail.com>",
   "homepage": "https://github.com/emn178/js-sha256",
   "bugs": {
     "url": "https://github.com/emn178/js-sha256/issues"

@@ -84,40 +84,9 @@ Output
 [UTF8](http://jsperf.com/sha256/66)  
 [ASCII](http://jsperf.com/sha256/65)
 
-## Extensions
-### jQuery
-If you prefer jQuery style, you can add following code to add a jQuery extension.
-
-Code
-```JavaScript
-jQuery.sha256 = sha256
-jQuery.sha224 = sha224
-```
-And then you could use like this:
-```JavaScript
-$.sha256('message');
-$.sha224('message');
-```
-### Prototype
-If you prefer prototype style, you can add following code to add a prototype extension.
-
-Code
-```JavaScript
-String.prototype.sha256 = function() {
-  return sha256(this);
-};
-String.prototype.sha224 = function() {
-  return sha224(this);
-};
-```
-And then you could use like this:
-```JavaScript
-'message'.sha256();
-'message'.sha224();
-```
 ## License
 The project is released under the [MIT license](http://www.opensource.org/licenses/MIT).
 
 ## Contact
 The project's website is located at https://github.com/emn178/js-sha256  
-Author: emn178@gmail.com
+Author: Chen, Yi-Cyuan (emn178@gmail.com)
