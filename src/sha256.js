@@ -1,7 +1,7 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.3.1
+ * @version 0.3.2
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2016
  * @license MIT
@@ -13,7 +13,7 @@
   if (NODE_JS) {
     root = global;
   }
-  var TYPED_ARRAY = typeof Uint8Array != 'undefined';
+  var COMMON_JS = !root.JS_SHA256_TEST && typeof module == 'object' && module.exports;
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -217,7 +217,7 @@
     return hex;
   };
   
-  if (!root.JS_SHA256_TEST && NODE_JS) {
+  if (COMMON_JS) {
     sha256.sha256 = sha256;
     sha256.sha224 = sha224;
     module.exports = sha256;
