@@ -1,6 +1,7 @@
 # js-sha256
 [![Build Status](https://travis-ci.org/emn178/js-sha256.svg?branch=master)](https://travis-ci.org/emn178/js-sha256)
-[![Coverage Status](https://coveralls.io/repos/emn178/js-sha256/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha256?branch=master)  
+[![Coverage Status](https://coveralls.io/repos/emn178/js-sha256/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha256?branch=master)
+[![CDNJS](https://img.shields.io/cdnjs/v/js-sha256.svg)](https://cdnjs.com/libraries/js-sha256/)  
 [![NPM](https://nodei.co/npm/js-sha256.png?stars&downloads)](https://nodei.co/npm/js-sha256/)  
 A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 
