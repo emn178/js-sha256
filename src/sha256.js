@@ -1,19 +1,22 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.3.2
+ * @version 0.4.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2014-2016
+ * @copyright Chen, Yi-Cyuan 2014-2017
  * @license MIT
  */
-(function (root) {
+/*jslint bitwise: true */
+(function () {
   'use strict';
 
-  var NODE_JS = typeof process == 'object' && process.versions && process.versions.node;
+  var root = typeof window === 'object' ? window : {};
+  var NODE_JS = !root.JS_SHA256_NO_NODE_JS && typeof process == 'object' && process.versions && process.versions.node;
   if (NODE_JS) {
     root = global;
   }
-  var COMMON_JS = !root.JS_SHA256_TEST && typeof module == 'object' && module.exports;
+  var COMMON_JS = !root.JS_SHA256_NO_COMMON_JS && typeof module === 'object' && module.exports;
+  var AMD = typeof define === 'function' && define.amd;
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -69,11 +72,11 @@
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
       blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
       if (notString) {
-        for (i = start;index < length && i < 64;++index) {
+        for (i = start; index < length && i < 64; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       } else {
-        for (i = start;index < length && i < 64;++index) {
+        for (i = start; index < length && i < 64; ++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
             blocks[i >> 2] |= code << SHIFT[i++ & 3];
@@ -106,7 +109,7 @@
       }
 
       var a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
-      for (j = 16;j < 64;++j) {
+      for (j = 16; j < 64; ++j) {
         // rightrotate
         t1 = blocks[j - 15];
         s0 = ((t1 >>> 7) | (t1 << 25)) ^ ((t1 >>> 18) | (t1 << 14)) ^ (t1 >>> 3);
@@ -116,7 +119,7 @@
       }
 
       bc = b & c;
-      for (j = 0;j < 64;j += 4) {
+      for (j = 0; j < 64; j += 4) {
         if (first) {
           if (is224) {
             ab = 300032;
@@ -216,13 +219,20 @@
     }
     return hex;
   };
-  
+
+  var exports = sha256;
+  exports.sha256 = sha256;
+  exports.sha224 = sha224;
+
   if (COMMON_JS) {
-    sha256.sha256 = sha256;
-    sha256.sha224 = sha224;
-    module.exports = sha256;
-  } else if (root) {
+    module.exports = exports;
+  } else {
     root.sha256 = sha256;
     root.sha224 = sha224;
+    if (AMD) {
+      define(function () {
+        return exports;
+      });
+    }
   }
-}(this));
+})();

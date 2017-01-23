@@ -81,10 +81,6 @@ Output
     e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
     182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f
 
-## Benchmark
-[UTF8](http://jsperf.com/sha256/66)  
-[ASCII](http://jsperf.com/sha256/65)
-
 ## License
 The project is released under the [MIT license](http://www.opensource.org/licenses/MIT).
 
