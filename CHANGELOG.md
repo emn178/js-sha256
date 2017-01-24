@@ -7,6 +7,7 @@
 ## v0.4.0 / 2017-01-23
 ### Added
 - AMD support.
+
 ### Fixed
 - ArrayBuffer dosen't work in Webpack.
 
@@ -17,6 +18,7 @@
 ## v0.3.1 / 2016-09-08
 ### Added
 - some files to npm package.
+
 ### Fixed
 - coding style.
 
@@ -35,14 +37,17 @@
 ## v0.2.1 / 2015-02-05
 ### Fixed
 - special length bug.
+
 ### Added
 - test cases.
 
 ## v0.2.0 / 2015-02-03
 ### Removed
 - ascii parameter.
+
 ### Improved
 - performance.
+
 ### Added
 - test cases.
 
@@ -59,6 +64,7 @@
 - bower package.
 - travis.
 - coveralls.
+
 ### Fixed
 - JSHint warnings.
 
