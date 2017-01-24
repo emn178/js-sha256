@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.5.0 / 2017-01-24
+### Added
+- Streaming support #6
+
 ## v0.4.0 / 2017-01-23
 ### Added
 - AMD support.
