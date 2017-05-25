@@ -7,6 +7,7 @@
  * @license MIT
  */
 /*jslint bitwise: true */
+var sha224, sha256;
 (function () {
   'use strict';
 
@@ -364,6 +365,9 @@
   exports.sha256 = exports;
   exports.sha224 = createMethod(true);
 
+  sha224 = exports.sha224;
+  sha256 = exports.sha256;
+  
   if (COMMON_JS) {
     module.exports = exports;
   } else {
