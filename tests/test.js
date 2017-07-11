@@ -52,9 +52,6 @@
       'ArrayBuffer': {
         'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': new ArrayBuffer(0),
         '6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d': new ArrayBuffer(1),
-      },
-      'Object': {
-        'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': {what: 'ever'}
       }
     },
     sha224: {
@@ -97,12 +94,11 @@
       'ArrayBuffer': {
         'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f': new ArrayBuffer(0),
         'fff9292b4201617bdc4d3053fce02734166a683d7d858a7f5f59b073': new ArrayBuffer(1),
-      },
-      'Object': {
-        'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f': {what: 'ever'}
       }
     }
   };
+
+  var errorTestCases = [null, undefined, { length: 0 }, 0, 1, false, true, NaN, Infinity, function () {}];
 
   if (typeof process == 'object') {
     testCases.sha256['Buffer'] = {
@@ -231,6 +227,18 @@
               });
             })(testCaseName);
           }
+        });
+      });
+
+      describe('#' + name, function () {
+        errorTestCases.forEach(function (testCase) {
+          context('when ' + testCase, function () {
+            it('should throw error', function () {
+              expect(function () {
+                algorithm(testCase);
+              }).to.throwError(/input is invalid type/);
+            });
+          });
         });
       });
     });

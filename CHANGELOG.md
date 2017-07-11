@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.6.0 / 2017-07-11
+### Added
+- HMAC feature.
+
+### Changed
+- throw error if input type is incorrect.
+
 ## v0.5.0 / 2017-01-24
 ### Added
 - Streaming support #6

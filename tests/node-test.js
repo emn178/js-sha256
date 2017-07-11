@@ -3,9 +3,11 @@ expect = require('expect.js');
 sha256 = require('../src/sha256.js').sha256;
 sha224 = require('../src/sha256.js').sha224;
 require('./test.js');
+require('./hmac-test.js');
 
 delete require.cache[require.resolve('../src/sha256.js')]
 delete require.cache[require.resolve('./test.js')]
+delete require.cache[require.resolve('./hmac-test.js')]
 sha256 = null;
 sha224 = null;
 
@@ -15,9 +17,11 @@ window = global;
 sha256 = require('../src/sha256.js').sha256;
 sha224 = require('../src/sha256.js').sha224;
 require('./test.js');
+require('./hmac-test.js');
 
 delete require.cache[require.resolve('../src/sha256.js')]
 delete require.cache[require.resolve('./test.js')]
+delete require.cache[require.resolve('./hmac-test.js')]
 sha256 = null;
 sha224 = null;
 
@@ -27,9 +31,11 @@ JS_SHA256_NO_COMMON_JS = true;
 window = global;
 require('../src/sha256.js');
 require('./test.js');
+require('./hmac-test.js');
 
 delete require.cache[require.resolve('../src/sha256.js')]
 delete require.cache[require.resolve('./test.js')]
+delete require.cache[require.resolve('./hmac-test.js')]
 sha256 = null;
 sha224 = null;
 
@@ -41,6 +47,7 @@ define = function (func) {
   sha256 = func();
   sha224 = sha256.sha224;
   require('./test.js');
+  require('./hmac-test.js');
 };
 define.amd = true;
 
