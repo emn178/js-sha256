@@ -1,7 +1,7 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.6.0
+ * @version 0.7.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2017
  * @license MIT
@@ -142,7 +142,7 @@
       this.h7 = 0x5be0cd19;
     }
 
-    this.block = this.start = this.bytes = 0;
+    this.block = this.start = this.bytes = this.hBytes = 0;
     this.finalized = this.hashed = false;
     this.first = true;
     this.is224 = is224;
@@ -208,6 +208,10 @@
 
       this.lastByteIndex = i;
       this.bytes += i - this.start;
+      while (this.bytes > 4294967295) {
+        ++this.hBytes;
+        this.bytes -= 4294967296;
+      }
       if (i >= 64) {
         this.block = blocks[16];
         this.start = i - 64;
@@ -239,6 +243,7 @@
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
       blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
     }
+    blocks[14] = this.hBytes << 3 | this.bytes >> 29;
     blocks[15] = this.bytes << 3;
     this.hash();
   };

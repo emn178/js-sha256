@@ -240,6 +240,13 @@
             });
           });
         });
+
+        context('when large size', function () {
+          var hash = algorithm.create();
+          hash.bytes = 4294967295;
+          hash.update('any');
+          expect(hash.hBytes).to.be(1);
+        });
       });
     });
   }
