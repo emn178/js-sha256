@@ -79,8 +79,20 @@
   };
 
   if (!(typeof JS_SHA256_NO_ARRAY_BUFFER === 'boolean' && JS_SHA256_NO_ARRAY_BUFFER)) {
+    testCases.sha256_hmac.Uint8Array = {
+      'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
+        new Uint8Array(0),
+        'Hi There'
+      ]
+    };
     testCases.sha256_hmac.ArrayBuffer = {
       'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
+        new ArrayBuffer(0),
+        'Hi There'
+      ]
+    };
+    testCases.sha224_hmac.Uint8Array = {
+      'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
         new ArrayBuffer(0),
         'Hi There'
       ]
