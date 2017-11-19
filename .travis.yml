@@ -4,8 +4,7 @@ node_js:
   - "8.6.0"
 before_install:
   - npm install coveralls
-  - npm install mocha-lcov-reporter
-script: npm run-script coveralls
+after_success: npm run coveralls
 branches:
   only:
     - master

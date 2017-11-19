@@ -63,6 +63,10 @@ require(['your/path/sha256.js'], function(sha256) {
 // ...
 });
 ```
+or TypeScript
+```TypeScript
+import { sha256, sha224 } from 'js-sha256';
+```
 ## Example
 ```JavaScript
 sha256(''); // e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
