@@ -1,7 +1,7 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.7.1
+ * @version 0.8.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2017
  * @license MIT
@@ -11,14 +11,21 @@
   'use strict';
 
   var ERROR = 'input is invalid type';
-  var root = typeof window === 'object' ? window : {};
+  var WINDOW = typeof window === 'object';
+  var root = WINDOW ? window : {};
+  if (root.JS_SHA256_NO_WINDOW) {
+    WINDOW = false;
+  }
+  var WEB_WORKER = !WINDOW && typeof self === 'object';
   var NODE_JS = !root.JS_SHA256_NO_NODE_JS && typeof process === 'object' && process.versions && process.versions.node;
   if (NODE_JS) {
     root = global;
+  } else if (WEB_WORKER) {
+    root = self;
   }
   var COMMON_JS = !root.JS_SHA256_NO_COMMON_JS && typeof module === 'object' && module.exports;
   var AMD = typeof define === 'function' && define.amd;
-  var ARRAY_BUFFER = typeof ArrayBuffer !== 'undefined';
+  var ARRAY_BUFFER = !root.JS_SHA256_NO_ARRAY_BUFFER && typeof ArrayBuffer !== 'undefined';
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -39,6 +46,12 @@
   if (root.JS_SHA256_NO_NODE_JS || !Array.isArray) {
     Array.isArray = function (obj) {
       return Object.prototype.toString.call(obj) === '[object Array]';
+    };
+  }
+
+  if (ARRAY_BUFFER && (root.JS_SHA256_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView)) {
+    ArrayBuffer.isView = function (obj) {
+      return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
     };
   }
 
@@ -67,8 +80,8 @@
   };
 
   var nodeWrap = function (method, is224) {
-    var crypto = require('crypto');
-    var Buffer = require('buffer').Buffer;
+    var crypto = eval("require('crypto')");
+    var Buffer = eval("require('buffer').Buffer");
     var algorithm = is224 ? 'sha224' : 'sha256';
     var nodeMethod = function (message) {
       if (typeof message === 'string') {
@@ -114,9 +127,9 @@
   function Sha256(is224, sharedMemory) {
     if (sharedMemory) {
       blocks[0] = blocks[16] = blocks[1] = blocks[2] = blocks[3] =
-      blocks[4] = blocks[5] = blocks[6] = blocks[7] =
-      blocks[8] = blocks[9] = blocks[10] = blocks[11] =
-      blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
+        blocks[4] = blocks[5] = blocks[6] = blocks[7] =
+        blocks[8] = blocks[9] = blocks[10] = blocks[11] =
+        blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
       this.blocks = blocks;
     } else {
       this.blocks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -152,32 +165,33 @@
     if (this.finalized) {
       return;
     }
-    var notString = typeof message !== 'string';
-    if (notString) {
-      if (message === null || message === undefined) {
+    var notString, type = typeof message;
+    if (type !== 'string') {
+      if (type === 'object') {
+        if (message === null) {
+          throw ERROR;
+        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
+          message = new Uint8Array(message);
+        } else if (!Array.isArray(message)) {
+          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
+            throw ERROR;
+          }
+        }
+      } else {
         throw ERROR;
-      } else if (message.constructor === root.ArrayBuffer) {
-        message = new Uint8Array(message);
       }
+      notString = true;
     }
-    var length = message.length;
-    if (notString) {
-      if (typeof length !== 'number' ||
-        !Array.isArray(message) && 
-        !(ARRAY_BUFFER && ArrayBuffer.isView(message))) {
-        throw ERROR;
-      }
-    }
-    var code, index = 0, i, blocks = this.blocks;
+    var code, index = 0, i, length = message.length, blocks = this.blocks;
 
     while (index < length) {
       if (this.hashed) {
         this.hashed = false;
         blocks[0] = this.block;
         blocks[16] = blocks[1] = blocks[2] = blocks[3] =
-        blocks[4] = blocks[5] = blocks[6] = blocks[7] =
-        blocks[8] = blocks[9] = blocks[10] = blocks[11] =
-        blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
+          blocks[4] = blocks[5] = blocks[6] = blocks[7] =
+          blocks[8] = blocks[9] = blocks[10] = blocks[11] =
+          blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
       }
 
       if (notString) {
@@ -239,9 +253,9 @@
       }
       blocks[0] = this.block;
       blocks[16] = blocks[1] = blocks[2] = blocks[3] =
-      blocks[4] = blocks[5] = blocks[6] = blocks[7] =
-      blocks[8] = blocks[9] = blocks[10] = blocks[11] =
-      blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
+        blocks[4] = blocks[5] = blocks[6] = blocks[7] =
+        blocks[8] = blocks[9] = blocks[10] = blocks[11] =
+        blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
     }
     blocks[14] = this.hBytes << 3 | this.bytes >> 29;
     blocks[15] = this.bytes << 3;
@@ -413,24 +427,10 @@
   };
 
   function HmacSha256(key, is224, sharedMemory) {
-    var notString = typeof key !== 'string';
-    if (notString) {
-      if (key === null || key === undefined) {
-        throw ERROR;
-      } else if (key.constructor === root.ArrayBuffer) {
-        key = new Uint8Array(key);
-      }
-    }
-    var length = key.length;
-    if (notString) {
-      if (typeof length !== 'number' ||
-        !Array.isArray(key) && 
-        !(ARRAY_BUFFER && ArrayBuffer.isView(key))) {
-        throw ERROR;
-      }
-    } else {
+    var i, type = typeof key;
+    if (type === 'string') {
       var bytes = [], length = key.length, index = 0, code;
-      for (var i = 0; i < length; ++i) {
+      for (i = 0; i < length; ++i) {
         code = key.charCodeAt(i);
         if (code < 0x80) {
           bytes[index++] = code;
@@ -450,6 +450,20 @@
         }
       }
       key = bytes;
+    } else {
+      if (type === 'object') {
+        if (key === null) {
+          throw ERROR;
+        } else if (ARRAY_BUFFER && key.constructor === ArrayBuffer) {
+          key = new Uint8Array(key);
+        } else if (!Array.isArray(key)) {
+          if (!ARRAY_BUFFER || !ArrayBuffer.isView(key)) {
+            throw ERROR;
+          }
+        }
+      } else {
+        throw ERROR;
+      }
     }
 
     if (key.length > 64) {
@@ -457,7 +471,7 @@
     }
 
     var oKeyPad = [], iKeyPad = [];
-    for (var i = 0; i < 64; ++i) {
+    for (i = 0; i < 64; ++i) {
       var b = key[i] || 0;
       oKeyPad[i] = 0x5c ^ b;
       iKeyPad[i] = 0x36 ^ b;

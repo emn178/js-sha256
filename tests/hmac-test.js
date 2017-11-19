@@ -41,12 +41,6 @@
         '865cc329d317f6d9fdbd183a3c5cc5fd4c370d11f98abbbb404bceb1e6392c7e': ['中文', '中文'],
         'efeef87be5731506b69bb64a9898a456dd12c94834c36a4d8ba99e3db79ad7ed': ['aécio', 'aécio'],
         '8a6e527049b9cfc7e1c84bcf356a1289c95da68a586c03de3327f3de0d3737fe': ['𠜎', '𠜎']
-      },
-      'ArrayBuffer': {
-        'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
-          new ArrayBuffer(0),
-          'Hi There'
-        ]
       }
     },
     sha224_hmac: {
@@ -80,15 +74,24 @@
         'e2280928fe813aeb7fa59aa14dd5e589041bfdf91945d19d25b9f3db': ['中文', '中文'],
         '86c53dc054b16f6e006a254891bc9ff0da5df8e1a6faee3b0aaa732d': ['aécio', 'aécio'],
         'e9e5991bfb84506b105f800afac1599ff807bb8e20db8ffda48997b9': ['𠜎', '𠜎']
-      },
-      'ArrayBuffer': {
-        'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
-          new ArrayBuffer(0),
-          'Hi There'
-        ]
       }
     }
   };
+
+  if (!(typeof JS_SHA256_NO_ARRAY_BUFFER === 'boolean' && JS_SHA256_NO_ARRAY_BUFFER)) {
+    testCases.sha256_hmac.ArrayBuffer = {
+      'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
+        new ArrayBuffer(0),
+        'Hi There'
+      ]
+    };
+    testCases.sha224_hmac.ArrayBuffer = {
+      'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
+        new ArrayBuffer(0),
+        'Hi There'
+      ]
+    };
+  }
 
   var errorTestCases = [null, undefined, { length: 0 }, 0, 1, false, true, NaN, Infinity, function () {}];
 

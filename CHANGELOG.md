@@ -1,5 +1,13 @@
 # Change Log
 
+## v0.8.0 / 2017-11-19
+### Added
+- support for web worker.
+- typescript types. #10
+
+### Changed
+- prevent webpack to require dependencies.
+
 ## v0.7.1 / 2017-10-31
 ### Improved
 - performance of hBytes increment.
