@@ -88,7 +88,7 @@
         return crypto.createHash(algorithm).update(message, 'utf8').digest('hex');
       } else {
         if (message === null || message === undefined) {
-          throw ERROR;
+          throw new Error(ERROR);
         } else if (message.constructor === ArrayBuffer) {
           message = new Uint8Array(message);
         }
@@ -169,16 +169,16 @@
     if (type !== 'string') {
       if (type === 'object') {
         if (message === null) {
-          throw ERROR;
+          throw new Error(ERROR);
         } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
           message = new Uint8Array(message);
         } else if (!Array.isArray(message)) {
           if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
-            throw ERROR;
+            throw new Error(ERROR);
           }
         }
       } else {
-        throw ERROR;
+        throw new Error(ERROR);
       }
       notString = true;
     }
@@ -453,16 +453,16 @@
     } else {
       if (type === 'object') {
         if (key === null) {
-          throw ERROR;
+          throw new Error(ERROR);
         } else if (ARRAY_BUFFER && key.constructor === ArrayBuffer) {
           key = new Uint8Array(key);
         } else if (!Array.isArray(key)) {
           if (!ARRAY_BUFFER || !ArrayBuffer.isView(key)) {
-            throw ERROR;
+            throw new Error(ERROR);
           }
         }
       } else {
-        throw ERROR;
+        throw new Error(ERROR);
       }
     }
 
