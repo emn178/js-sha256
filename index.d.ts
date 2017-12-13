@@ -53,6 +53,14 @@ interface Hash {
    * @param message The message you want to hash.
    */
   update(message: Message): Hasher;
+
+  /**
+   * Computes a Hash-based message authentication code (HMAC) using a secret key
+   *
+   * @param secretKey The Secret Key
+   * @param message The message you want to hash.
+   */
+  hmac(secretKey: string, message: Message): string;
 }
 
 export var sha256: Hash;
