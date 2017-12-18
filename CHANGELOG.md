@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.9.0 / 2017-12-18
+### Fixed
+- incorrect result when first bit is 1 of bytes.
+
+### Changed
+- throw error by Error oject. #13
+
+### Added
+- TypeScript interfaces. #12
+
 ## v0.8.0 / 2017-11-19
 ### Added
 - support for web worker.
