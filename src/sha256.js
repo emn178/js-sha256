@@ -510,7 +510,7 @@
     root.sha256 = exports.sha256;
     root.sha224 = exports.sha224;
     if (AMD) {
-      define(function () {
+      define("js-sha256",function () {
         return exports;
       });
     }
