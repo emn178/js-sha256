@@ -4,10 +4,12 @@
   "description": "A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha256.js",
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "expect.js": "~0.3.1",
     "mocha": "~2.3.4",
     "nyc": "^11.3.0",
     "uglify-js": "^3.1.9",
+    "uglifyjs": "^2.4.11",
     "webworker-threads": "^0.7.13"
   },
   "scripts": {

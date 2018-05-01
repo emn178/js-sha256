@@ -67,7 +67,10 @@ JS_SHA256_NO_NODE_JS = true;
 JS_SHA256_NO_COMMON_JS = true;
 JS_SHA256_NO_ARRAY_BUFFER_IS_VIEW = false;
 window = global;
-define = function (func) {
+define = function (id, func) {
+  if(typeof(id) == "function" && typeof(func) == "undefined" ){
+    func = id;
+  }
   sha256 = func();
   sha224 = sha256.sha224;
   require('./test.js');
