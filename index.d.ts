@@ -48,7 +48,7 @@ interface Hmac {
    *
    * @param secretKey The Secret Key
    */
-  create(secretKey: string): Hasher;
+  create(secretKey: string | number[]): Hasher;
 
   /**
    * Create a hash object and hash message using a secret key
