@@ -7,8 +7,7 @@
     "expect.js": "~0.3.1",
     "mocha": "~2.3.4",
     "nyc": "^11.3.0",
-    "uglify-js": "^3.1.9",
-    "webworker-threads": "^0.7.13"
+    "uglify-js": "^3.1.9"
   },
   "scripts": {
     "test": "nyc mocha tests/node-test.js",
