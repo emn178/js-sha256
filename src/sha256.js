@@ -95,7 +95,7 @@
       }
       if (Array.isArray(message) || ArrayBuffer.isView(message) ||
         message.constructor === Buffer) {
-        return crypto.createHash(algorithm).update(new Buffer(message)).digest('hex');
+        return crypto.createHash(algorithm).update(new Buffer.from(message)).digest('hex');
       } else {
         return method(message);
       }
