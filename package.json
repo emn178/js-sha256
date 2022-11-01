@@ -5,7 +5,7 @@
   "main": "src/sha256.js",
   "devDependencies": {
     "expect.js": "~0.3.1",
-    "mocha": "~2.3.4",
+    "mocha": "~10.1.0",
     "nyc": "^11.3.0",
     "uglify-js": "^3.1.9",
     "webworker-threads": "^0.7.13"
