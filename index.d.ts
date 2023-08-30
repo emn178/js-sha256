@@ -41,14 +41,14 @@ interface Hmac {
    * @param secretKey The Secret Key
    * @param message The message you want to hash.
    */
-  (secretKey: string, message: Message): string;
+  (secretKey: Message, message: Message): string;
 
   /**
    * Create a hash object using a secret key.
    *
    * @param secretKey The Secret Key
    */
-  create(secretKey: string): Hasher;
+  create(secretKey: Message): Hasher;
 
   /**
    * Create a hash object and hash message using a secret key
@@ -56,7 +56,7 @@ interface Hmac {
    * @param secretKey The Secret Key
    * @param message The message you want to hash.
    */
-  update(secretKey: string, message: Message): Hasher;
+  update(secretKey: Message, message: Message): Hasher;
 
   /**
    * Return hash in hex string.
@@ -64,7 +64,7 @@ interface Hmac {
    * @param secretKey The Secret Key
    * @param message The message you want to hash.
    */
-  hex(secretKey: string, message: Message): string;
+  hex(secretKey: Message, message: Message): string;
 
   /**
    * Return hash in ArrayBuffer.
@@ -72,7 +72,7 @@ interface Hmac {
    * @param secretKey The Secret Key
    * @param message The message you want to hash.
    */
-  arrayBuffer(secretKey: string, message: Message): ArrayBuffer;
+  arrayBuffer(secretKey: Message, message: Message): ArrayBuffer;
 
   /**
    * Return hash in integer array.
@@ -80,7 +80,7 @@ interface Hmac {
    * @param secretKey The Secret Key
    * @param message The message you want to hash.
    */
-  digest(secretKey: string, message: Message): number[];
+  digest(secretKey: Message, message: Message): number[];
 
   /**
    * Return hash in integer array.
@@ -88,7 +88,7 @@ interface Hmac {
    * @param secretKey The Secret Key
    * @param message The message you want to hash.
    */
-  array(secretKey: string, message: Message): number[];
+  array(secretKey: Message, message: Message): number[];
 }
 
 interface Hash {

@@ -1,9 +1,9 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.9.0
+ * @version 0.10.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2014-2017
+ * @copyright Chen, Yi-Cyuan 2014-2023
  * @license MIT
  */
 /*jslint bitwise: true */
@@ -80,9 +80,17 @@
   };
 
   var nodeWrap = function (method, is224) {
-    var crypto = eval("require('crypto')");
-    var Buffer = eval("require('buffer').Buffer");
+    var crypto = require('crypto')
+    var Buffer = require('buffer').Buffer;
     var algorithm = is224 ? 'sha224' : 'sha256';
+    var bufferFrom;
+    if (Buffer.from && !root.JS_SHA256_NO_BUFFER_FROM) {
+      bufferFrom = Buffer.from;
+    } else {
+      bufferFrom = function (message) {
+        return new Buffer(message);
+      };
+    }
     var nodeMethod = function (message) {
       if (typeof message === 'string') {
         return crypto.createHash(algorithm).update(message, 'utf8').digest('hex');
@@ -95,7 +103,7 @@
       }
       if (Array.isArray(message) || ArrayBuffer.isView(message) ||
         message.constructor === Buffer) {
-        return crypto.createHash(algorithm).update(new Buffer(message)).digest('hex');
+        return crypto.createHash(algorithm).update(bufferFrom(message)).digest('hex');
       } else {
         return method(message);
       }
@@ -328,6 +336,7 @@
       t2 = s0 + maj;
       e = a + t1 << 0;
       a = t1 + t2 << 0;
+      this.chromeBugWorkAround = true;
     }
 
     this.h0 = this.h0 + a << 0;

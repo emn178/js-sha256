@@ -11,6 +11,9 @@
         var worker = new Worker(WORKER);
         worker.onmessage = function(event) {
           expect(event.data).to.be(hash);
+          if (worker.terminate) {
+            worker.terminate();
+          }
           done();
         };
         worker.postMessage(SOURCE);

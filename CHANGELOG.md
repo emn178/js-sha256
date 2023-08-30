@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.10.0 / 2023-08-30
+### Fixed
+- Chrome bug by workaround. #40
+- deprecated `new Buffer`, replace with `Buffer.from`. #34
+- dependencies and security issues. #32, #36
+
+### Changed
+- TypeScript interface, secretKey can be bytes like message. #23, #25
+- remove `eval` and use `require` directly. #18, #26
+
 ## v0.9.0 / 2017-12-18
 ### Fixed
 - incorrect result when first bit is 1 of bytes.

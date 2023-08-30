@@ -1,5 +1,5 @@
 expect = require('expect.js');
-Worker = require('webworker-threads').Worker;
+Worker = require("tiny-worker");
 
 function unset() {
   delete require.cache[require.resolve('../src/sha256.js')];
@@ -38,6 +38,10 @@ function runWindowTest() {
 
 // Node.js env
 BUFFER = true;
+runCommonJsTest();
+
+// Node.js env, no Buffer.from
+JS_SHA256_NO_BUFFER_FROM = true
 runCommonJsTest();
 
 // Webpack browser env
