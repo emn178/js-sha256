@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.10.1 / 2023-08-31
+### Added
+- Disable webpack polyfill.
+
 ## v0.10.0 / 2023-08-30
 ### Fixed
 - Chrome bug by workaround. #40

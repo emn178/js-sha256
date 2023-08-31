@@ -64,7 +64,7 @@ or
 const { sha256, sha224 } = require('js-sha256');
 ```
 ### TypeScript
-or TypeScript
+If you use TypeScript, you can import like this:
 ```TypeScript
 import { sha256, sha224 } from 'js-sha256';
 ```
