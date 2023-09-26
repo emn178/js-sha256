@@ -6,8 +6,10 @@
 A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 
 ## Demo
-[SHA256 Online](http://emn178.github.io/online-tools/sha256.html)  
-[SHA224 Online](http://emn178.github.io/online-tools/sha224.html)  
+[SHA256 Online](https://emn178.github.io/online-tools/sha256.html)  
+[SHA224 Online](https://emn178.github.io/online-tools/sha224.html)  
+[SHA256 File Online](https://emn178.github.io/online-tools/sha256_checksum.html)  
+[SHA225 File Online](https://emn178.github.io/online-tools/sha224_checksum.html)  
 
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha256/master/build/sha256.min.js)  
@@ -100,8 +102,11 @@ sha256.digest(''); // [227, 176, 196, 66, 152, 252, 28, 20, 154, 251, 244, 200, 
 sha256.arrayBuffer(''); // ArrayBuffer
 ```
 
+## Benchmark
+[jsPerf Benchmark](https://jsperf.app/cidole/2)
+
 ## License
-The project is released under the [MIT license](http://www.opensource.org/licenses/MIT).
+The project is released under the [MIT license](https://opensource.org/license/mit/).
 
 ## Contact
 The project's website is located at https://github.com/emn178/js-sha256  
