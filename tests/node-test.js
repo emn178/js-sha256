@@ -24,7 +24,7 @@ function requireToGlobal() {
 function runCommonJsTest() {
   requireToGlobal();
   require('./test.js');
-  // require('./hmac-test.js');
+  require('./hmac-test.js');
   unset();
 }
 
