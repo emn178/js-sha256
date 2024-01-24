@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.11.0 / 2024-01-24
+### Fixed
+- Generates incorrect hash in some cases #43
+- dependencies and security issues. #41
+
 ## v0.10.1 / 2023-08-31
 ### Added
 - Disable webpack polyfill.
