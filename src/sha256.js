@@ -1,9 +1,9 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.11.0
+ * @version 0.11.1
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2014-2024
+ * @copyright Chen, Yi-Cyuan 2014-2025
  * @license MIT
  */
 /*jslint bitwise: true */

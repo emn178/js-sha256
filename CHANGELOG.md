@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.11.1 / 2025-05-24
+### Fixed
+- Fix NodeJS check for electron renderer #49
+
 ## v0.11.0 / 2024-01-24
 ### Fixed
 - Generates incorrect hash in some cases #43
