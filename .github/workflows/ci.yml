@@ -37,4 +37,8 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Upload to coveralls
+        run: |
+          npm install coveralls
+          npm run coveralls
 
