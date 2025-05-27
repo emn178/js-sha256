@@ -25,11 +25,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        if: matrix.node-version != '6.x'
-
-      - name: Install dependencies for Node 6.x
-        run: npm install
-        if: matrix.node-version == '6.x'
 
       - name: Build
         run: npm run build
