@@ -13,7 +13,7 @@
   "scripts": {
     "test": "nyc mocha tests/node-test.js",
     "report": "nyc --reporter=html --reporter=text mocha tests/node-test.js",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "build": "uglifyjs src/sha256.js -c -m eval --comments -o build/sha256.min.js"
   },
   "repository": {
