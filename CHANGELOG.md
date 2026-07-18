@@ -3,6 +3,7 @@
 ## v0.12.0 / 2026-07-18
 ### Added
 - support ESM #44
+- Set up GitHub release action / provenance #46
 
 ### Fixed
 - Fix uploading coverage to coveralls #52
