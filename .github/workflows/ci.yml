@@ -32,8 +32,10 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Upload to coveralls
-        run: |
-          npm install coveralls
-          npm run coveralls
+      - name: Generate coverage report
+        run: npm run coverage
 
+      - name: Upload to coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          file: ./coverage.lcov
