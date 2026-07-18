@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x, 18.x, 20.x, 22.x]
+        node-version: [14.x, 16.x, 18.x, 20.x, 22.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,15 +27,18 @@ jobs:
         run: npm ci
 
       - name: Build
+        if: matrix.node-version == '22.x'
         run: npm run build
 
       - name: Run tests
         run: npm test
 
       - name: Generate coverage report
+        if: matrix.node-version == '22.x'
         run: npm run coverage
 
       - name: Upload to coveralls
+        if: matrix.node-version == '22.x'
         uses: coverallsapp/github-action@v2
         with:
           file: ./coverage.lcov
