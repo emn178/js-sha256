@@ -6,6 +6,7 @@
 
 ### Fixed
 - Fix uploading coverage to coveralls #52
+- fix recognize environment is node when use browserfs #53
 
 ## v0.11.1 / 2025-05-24
 ### Fixed

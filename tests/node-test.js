@@ -36,6 +36,23 @@ function runWindowTest() {
   unset();
 }
 
+function runBrowserWithProcessPolyfillTest() {
+  var Module = require('module');
+  var originalRequire = Module.prototype.require;
+  window = global;
+  Module.prototype.require = function (id) {
+    if (id === 'crypto' || id === 'buffer') {
+      throw new Error('Node.js module loaded in browser environment');
+    }
+    return originalRequire.apply(this, arguments);
+  };
+  try {
+    runCommonJsTest();
+  } finally {
+    Module.prototype.require = originalRequire;
+  }
+}
+
 // Node.js env
 BUFFER = true;
 runCommonJsTest();
@@ -43,6 +60,9 @@ runCommonJsTest();
 // Node.js env, no Buffer.from
 JS_SHA256_NO_BUFFER_FROM = true
 runCommonJsTest();
+
+// browser env with a Node.js process polyfill
+runBrowserWithProcessPolyfillTest();
 
 // Webpack browser env
 JS_SHA256_NO_NODE_JS = true;

@@ -5,10 +5,11 @@ const disableNodeJs = {
   name: 'disable-node-js',
   transform(code, id) {
     if (id.endsWith('/src/sha256.js')) {
-      return code.replace(
-        "var NODE_JS = !root.JS_SHA256_NO_NODE_JS && typeof process === 'object' && process.versions && process.versions.node && process.type != 'renderer';",
-        'var NODE_JS = false;'
-      );
+      const nodeJsDeclaration = /^\s*var NODE_JS = .*;$/m;
+      if (!nodeJsDeclaration.test(code)) {
+        this.error('Could not find the NODE_JS declaration');
+      }
+      return code.replace(nodeJsDeclaration, '  var NODE_JS = false;');
     }
   }
 };

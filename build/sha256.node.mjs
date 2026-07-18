@@ -29,7 +29,7 @@ var sha256$1 = {exports: {}};
 	    WINDOW = false;
 	  }
 	  var WEB_WORKER = !WINDOW && typeof self === 'object';
-	  var NODE_JS = !root.JS_SHA256_NO_NODE_JS && typeof process === 'object' && process.versions && process.versions.node && process.type != 'renderer';
+	  var NODE_JS = !root.JS_SHA256_NO_NODE_JS && !WINDOW && typeof process === 'object' && process.versions && process.versions.node && process.type != 'renderer';
 	  if (NODE_JS) {
 	    root = commonjsGlobal;
 	  } else if (WEB_WORKER) {
