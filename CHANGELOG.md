@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.12.0 / 2026-07-18
+### Added
+- support ESM
+
 ## v0.11.1 / 2025-05-24
 ### Fixed
 - Fix NodeJS check for electron renderer #49
