@@ -1,8 +1,9 @@
 # js-sha256
 [![CI](https://github.com/emn178/js-sha256/actions/workflows/ci.yml/badge.svg)](https://github.com/emn178/js-sha256/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/emn178/js-sha256/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha256?branch=master)
-[![CDNJS](https://img.shields.io/cdnjs/v/js-sha256.svg)](https://cdnjs.com/libraries/js-sha256/)  
-[![NPM](https://nodei.co/npm/js-sha256.png?stars&downloads)](https://nodei.co/npm/js-sha256/)  
+[![NPM](https://nodei.co/npm/js-sha256.png?style=flat&data=n,v,d&color=brightgreen)](https://www.npmjs.com/package/js-sha256)
+[![CDNJS](https://img.shields.io/jsdelivr/npm/hm/js-sha256)](https://www.jsdelivr.com/package/npm/js-sha256)
+
 A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 
 ## Demo
@@ -38,13 +39,12 @@ Load the minified UMD build to expose `sha256` and `sha224` as globals:
 
 ### ES Modules
 ```JavaScript
-import sha256, { sha224 } from 'js-sha256';
+import { sha256, sha224 } from 'js-sha256';
 ```
 
 ### CommonJS
 ```JavaScript
-const sha256 = require('js-sha256');
-const { sha224 } = sha256;
+const { sha256, sha224 } = require('js-sha256');
 ```
 
 ### API
@@ -77,7 +77,7 @@ hash2.array();
 Node.js automatically uses its native `crypto` implementation with the same API:
 
 ```JavaScript
-import sha256, { sha224 } from 'js-sha256';
+import { sha256, sha224 } from 'js-sha256';
 
 const hash = sha256.create();
 hash.update('Message');
