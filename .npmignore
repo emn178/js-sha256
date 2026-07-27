@@ -1,6 +1,7 @@
 /node_modules/
 /coverage/
 /.nyc_output/
+/test-results/
 /tests/
 .covignore
 .travis.yml

@@ -147,3 +147,4 @@ interface Hash {
 
 export var sha256: Hash;
 export var sha224: Hash;
+export default sha256;

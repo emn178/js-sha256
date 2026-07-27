@@ -9,23 +9,45 @@ A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.
 [SHA256 Online](https://emn178.github.io/online-tools/sha256.html)  
 [SHA224 Online](https://emn178.github.io/online-tools/sha224.html)  
 [SHA256 File Online](https://emn178.github.io/online-tools/sha256_checksum.html)  
-[SHA225 File Online](https://emn178.github.io/online-tools/sha224_checksum.html)  
+[SHA224 File Online](https://emn178.github.io/online-tools/sha224_checksum.html)
 
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha256/master/build/sha256.min.js)  
-[Uncompress](https://raw.github.com/emn178/js-sha256/master/src/sha256.js)
+[Uncompress](https://raw.github.com/emn178/js-sha256/master/build/sha256.js)
 
 ## Installation
 You can also install js-sha256 by using Bower.
 
     bower install js-sha256
 
-For node.js, you can use this command to install:
+For Node.js, you can use this command to install:
 
     npm install js-sha256
 
 ## Usage
-You could use like this:
+
+### Browser
+Load the minified UMD build to expose `sha256` and `sha224` as globals:
+
+```HTML
+<script src="sha256.min.js"></script>
+<script>
+  console.log(sha256('Message to hash'));
+</script>
+```
+
+### ES Modules
+```JavaScript
+import sha256, { sha224 } from 'js-sha256';
+```
+
+### CommonJS
+```JavaScript
+const sha256 = require('js-sha256');
+const { sha224 } = sha256;
+```
+
+### API
 ```JavaScript
 sha256('Message to hash');
 sha224('Message to hash');
@@ -52,28 +74,26 @@ hash2.array();
 ```
 
 ### Node.js
-If you use node.js, you should require the module first:
+Node.js automatically uses its native `crypto` implementation with the same API:
+
 ```JavaScript
-var sha256 = require('js-sha256');
+import sha256, { sha224 } from 'js-sha256';
+
+const hash = sha256.create();
+hash.update('Message');
+hash.update(' to hash');
+console.log(hash.hex());
 ```
-or
-```JavaScript
-var sha256 = require('js-sha256').sha256;
-var sha224 = require('js-sha256').sha224;
-```
-or
-```JavaScript
-const { sha256, sha224 } = require('js-sha256');
-```
+
 ### TypeScript
 If you use TypeScript, you can import like this:
 ```TypeScript
 import { sha256, sha224 } from 'js-sha256';
 ```
 ### RequireJS
-It supports AMD:
+The UMD browser build supports AMD:
 ```JavaScript
-require(['your/path/sha256.js'], function(sha256) {
+require(['your/path/sha256.min.js'], function(sha256) {
 // ...
 });
 ```

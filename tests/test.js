@@ -77,41 +77,37 @@
     }
   };
 
-  if (!(typeof JS_SHA256_NO_ARRAY_BUFFER === 'boolean' && JS_SHA256_NO_ARRAY_BUFFER)) {
-    testCases.sha256.Uint8Array = {
-      '182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f': new Uint8Array([211, 212]),
-      'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
-    };
-    testCases.sha256.Int8Array = {
-      'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': new Int8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
-    };
-    testCases.sha256.ArrayBuffer = {
-      'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': new ArrayBuffer(0),
-      '6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d': new ArrayBuffer(1)
-    };
-    testCases.sha224.Uint8Array = {
-      'e17541396a3ecd1cd5a2b968b84e597e8eae3b0ea3127963bf48dd3b': new Uint8Array([211, 212]),
-      '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])    
-    };
-    testCases.sha224.Int8Array = {
-      '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': new Int8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
-    };
-    testCases.sha224.ArrayBuffer = {
-      'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f': new ArrayBuffer(0),
-      'fff9292b4201617bdc4d3053fce02734166a683d7d858a7f5f59b073': new ArrayBuffer(1),
-    };
-  }
+  testCases.sha256.Uint8Array = {
+    '182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f': new Uint8Array([211, 212]),
+    'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
+  };
+  testCases.sha256.Int8Array = {
+    'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': new Int8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
+  };
+  testCases.sha256.ArrayBuffer = {
+    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': new ArrayBuffer(0),
+    '6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d': new ArrayBuffer(1)
+  };
+  testCases.sha224.Uint8Array = {
+    'e17541396a3ecd1cd5a2b968b84e597e8eae3b0ea3127963bf48dd3b': new Uint8Array([211, 212]),
+    '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])    
+  };
+  testCases.sha224.Int8Array = {
+    '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': new Int8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
+  };
+  testCases.sha224.ArrayBuffer = {
+    'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f': new ArrayBuffer(0),
+    'fff9292b4201617bdc4d3053fce02734166a683d7d858a7f5f59b073': new ArrayBuffer(1),
+  };
 
-  if (typeof BUFFER === 'boolean' && BUFFER) {
-    testCases.sha256.Buffer = {
-      'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Buffer.from([]),
-      'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': Buffer.from(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))
-    };
-    testCases.sha224.Buffer = {
-      'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f': Buffer.from([]),
-      '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': Buffer.from(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))
-    };
-  }
+  testCases.sha256.Buffer = {
+    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Buffer.from([]),
+    'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': Buffer.from(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))
+  };
+  testCases.sha224.Buffer = {
+    'd14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f': Buffer.from([]),
+    '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': Buffer.from(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))
+  };
 
   var errorTestCases = [null, undefined, { length: 0 }, 0, 1, false, true, NaN, Infinity, function () {}];
 
@@ -187,7 +183,6 @@
         call: function (message) {
           var hash = algorithm.update(message);
           hash.hex();
-          hash.update(message);
           return hash.hex();
         }
       }
@@ -205,7 +200,7 @@
                 for (var hash in testCase) {
                   (function (message, hash) {
                     it('should be equal', function () {
-                      expect(method.call(message)).to.be(hash);
+                      assert.equal(method.call(message), hash);
                     });
                   })(testCase[hash], hash);
                 }
@@ -224,7 +219,7 @@
                 for (var hash in testCase) {
                   (function (message, hash) {
                     it('should be equal', function () {
-                      expect(method.call(message)).to.be(hash);
+                      assert.equal(method.call(message), hash);
                     });
                   })(testCase[hash], hash);
                 }
@@ -238,19 +233,31 @@
         errorTestCases.forEach(function (testCase) {
           context('when ' + testCase, function () {
             it('should throw error', function () {
-              expect(function () {
+              assert.throws(function () {
                 algorithm(testCase);
-              }).to.throwError(/input is invalid type/);
+              }, /input is invalid type/);
             });
           });
         });
 
-        context('when large size', function () {
-          var hash = algorithm.create();
-          hash.bytes = 4294967295;
-          hash.update('any');
-          expect(hash.hBytes).to.be(1);
+        context('when update after finalize', function () {
+          it('should throw error', function () {
+            assert.throws(function () {
+              var hash = algorithm.update('any');
+              hash.hex();
+              hash.update('any');
+            }, /finalize already called/);
+          });
         });
+
+        if (TEST_INTERNALS) {
+          context('when large size', function () {
+            var hash = algorithm.create();
+            hash.bytes = 4294967295;
+            hash.update('any');
+            assert.equal(hash.hBytes, 1);
+          });
+        }
       });
     });
   }

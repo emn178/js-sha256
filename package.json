@@ -1,43 +1,45 @@
 {
   "name": "js-sha256",
-  "version": "0.12.0",
+  "version": "1.0.0",
   "description": "A simple SHA-256 / SHA-224 hash function for JavaScript supports UTF-8 encoding.",
-  "main": "src/sha256.js",
-  "module": "build/sha256.mjs",
+  "main": "build/sha256.node.cjs",
+  "module": "src/index.mjs",
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "node": {
-        "import": "./build/sha256.node.mjs",
-        "require": "./src/sha256.js"
+        "import": "./src/node.mjs",
+        "require": "./build/sha256.node.cjs"
       },
-      "import": "./build/sha256.mjs",
-      "require": "./src/sha256.js",
-      "default": "./src/sha256.js"
+      "import": "./src/index.mjs",
+      "require": "./build/sha256.cjs",
+      "default": "./src/index.mjs"
     },
-    "./src/sha256.js": "./src/sha256.js",
+    "./src/sha256.js": "./build/sha256.js",
+    "./build/sha256.js": "./build/sha256.js",
+    "./build/sha256.cjs": "./build/sha256.cjs",
     "./build/sha256.min.js": "./build/sha256.min.js",
-    "./build/sha256.mjs": "./build/sha256.mjs",
     "./build/sha256.min.mjs": "./build/sha256.min.mjs",
-    "./build/sha256.node.mjs": "./build/sha256.node.mjs",
+    "./build/sha256.node.cjs": "./build/sha256.node.cjs",
     "./package.json": "./package.json"
   },
   "types": "./index.d.ts",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.5",
+    "@playwright/test": "^1.62.0",
     "@rollup/plugin-terser": "^1.0.0",
-    "expect.js": "~0.3.1",
+    "c8": "^8.0.1",
     "mocha": "~10.8.2",
-    "nyc": "^15.1.0",
-    "rollup": "^4.43.0",
-    "tiny-worker": "^2.3.0",
-    "uglify-js": "^3.1.9"
+    "rollup": "^4.43.0"
   },
   "scripts": {
-    "test": "nyc mocha tests/node-test.js && node tests/esm-test.mjs",
-    "report": "nyc --reporter=html --reporter=text mocha tests/node-test.js",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
-    "build": "rollup -c && uglifyjs src/sha256.js -c -m eval --comments -o build/sha256.min.js"
+    "test": "npm run build && npm run test:coverage",
+    "test:unit": "mocha tests/core-test.mjs && mocha tests/node-test.mjs",
+    "test:dist": "node tests/dist-test.mjs",
+    "test:runtime": "npm run test:unit && npm run test:dist",
+    "test:coverage": "c8 --all --include=src/shared.mjs --include=src/core.mjs --include=src/node.mjs --reporter=text --reporter=html --reporter=lcov npm run test:runtime",
+    "test:browser": "playwright test",
+    "build": "rollup -c",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -59,13 +61,5 @@
   "bugs": {
     "url": "https://github.com/emn178/js-sha256/issues"
   },
-  "nyc": {
-    "exclude": [
-      "tests"
-    ]
-  },
-  "browser": {
-    "crypto": false,
-    "buffer": false
-  }
+  "browser": "build/sha256.cjs"
 }

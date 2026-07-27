@@ -1,31 +1,40 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 0.12.0
+ * @version 1.0.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2026
  * @license MIT
  */
-/*jslint bitwise: true */
-(function () {
-  'use strict';
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.sha256 = factory());
+})(this, (function () { 'use strict';
 
-  var ERROR = 'input is invalid type';
-  var WINDOW = typeof window === 'object';
-  var root = WINDOW ? window : {};
-  if (root.JS_SHA256_NO_WINDOW) {
-    WINDOW = false;
-  }
-  var WEB_WORKER = !WINDOW && typeof self === 'object';
-  var NODE_JS = !root.JS_SHA256_NO_NODE_JS && !WINDOW && typeof process === 'object' && process.versions && process.versions.node && process.type != 'renderer';
-  if (NODE_JS) {
-    root = global;
-  } else if (WEB_WORKER) {
-    root = self;
-  }
-  var COMMON_JS = !root.JS_SHA256_NO_COMMON_JS && typeof module === 'object' && module.exports;
-  var AMD = typeof define === 'function' && define.amd;
-  var ARRAY_BUFFER = !root.JS_SHA256_NO_ARRAY_BUFFER && typeof ArrayBuffer !== 'undefined';
+  var INPUT_ERROR = 'input is invalid type';
+  var FINALIZE_ERROR = 'finalize already called';
+
+  var ARRAY_BUFFER = typeof ArrayBuffer !== 'undefined';
+
+  var formatMessage = function (message) {
+    var type = typeof message;
+    if (type === 'string') {
+      return [message, true];
+    }
+    if (Array.isArray(message)) {
+      return [message, false];
+    }
+    if (ARRAY_BUFFER && message) {
+      if (message.constructor === ArrayBuffer) {
+        return [new Uint8Array(message), false];
+      } else if (ArrayBuffer.isView(message)) {
+        return [message, false];
+      }
+    }
+    throw new Error(INPUT_ERROR);
+  };
+
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -43,18 +52,6 @@
 
   var blocks = [];
 
-  if (root.JS_SHA256_NO_NODE_JS || !Array.isArray) {
-    Array.isArray = function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    };
-  }
-
-  if (ARRAY_BUFFER && (root.JS_SHA256_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView)) {
-    ArrayBuffer.isView = function (obj) {
-      return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
-    };
-  }
-
   var createOutputMethod = function (outputType, is224) {
     return function (message) {
       return new Sha256(is224, true).update(message)[outputType]();
@@ -63,9 +60,6 @@
 
   var createMethod = function (is224) {
     var method = createOutputMethod('hex', is224);
-    if (NODE_JS) {
-      method = nodeWrap(method, is224);
-    }
     method.create = function () {
       return new Sha256(is224);
     };
@@ -77,38 +71,6 @@
       method[type] = createOutputMethod(type, is224);
     }
     return method;
-  };
-
-  var nodeWrap = function (method, is224) {
-    var crypto = require('crypto')
-    var Buffer = require('buffer').Buffer;
-    var algorithm = is224 ? 'sha224' : 'sha256';
-    var bufferFrom;
-    if (Buffer.from && !root.JS_SHA256_NO_BUFFER_FROM) {
-      bufferFrom = Buffer.from;
-    } else {
-      bufferFrom = function (message) {
-        return new Buffer(message);
-      };
-    }
-    var nodeMethod = function (message) {
-      if (typeof message === 'string') {
-        return crypto.createHash(algorithm).update(message, 'utf8').digest('hex');
-      } else {
-        if (message === null || message === undefined) {
-          throw new Error(ERROR);
-        } else if (message.constructor === ArrayBuffer) {
-          message = new Uint8Array(message);
-        }
-      }
-      if (Array.isArray(message) || ArrayBuffer.isView(message) ||
-        message.constructor === Buffer) {
-        return crypto.createHash(algorithm).update(bufferFrom(message)).digest('hex');
-      } else {
-        return method(message);
-      }
-    };
-    return nodeMethod;
   };
 
   var createHmacOutputMethod = function (outputType, is224) {
@@ -171,25 +133,11 @@
 
   Sha256.prototype.update = function (message) {
     if (this.finalized) {
-      return;
+      throw new Error(FINALIZE_ERROR);
     }
-    var notString, type = typeof message;
-    if (type !== 'string') {
-      if (type === 'object') {
-        if (message === null) {
-          throw new Error(ERROR);
-        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
-          message = new Uint8Array(message);
-        } else if (!Array.isArray(message)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
-            throw new Error(ERROR);
-          }
-        }
-      } else {
-        throw new Error(ERROR);
-      }
-      notString = true;
-    }
+    var result = formatMessage(message);
+    message = result[0];
+    var isString = result[1];
     var code, index = 0, i, length = message.length, blocks = this.blocks;
     while (index < length) {
       if (this.hashed) {
@@ -201,11 +149,7 @@
           blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
       }
 
-      if (notString) {
-        for (i = this.start; index < length && i < 64; ++index) {
-          blocks[i >>> 2] |= message[index] << SHIFT[i++ & 3];
-        }
-      } else {
+      if (isString) {
         for (i = this.start; index < length && i < 64; ++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
@@ -224,6 +168,10 @@
             blocks[i >>> 2] |= (0x80 | ((code >>> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >>> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
           }
+        }
+      } else {
+        for (i = this.start; index < length && i < 64; ++index) {
+          blocks[i >>> 2] |= message[index] << SHIFT[i++ & 3];
         }
       }
 
@@ -435,8 +383,9 @@
   };
 
   function HmacSha256(key, is224, sharedMemory) {
-    var i, type = typeof key;
-    if (type === 'string') {
+    var i, result = formatMessage(key);
+    key = result[0];
+    if (result[1]) {
       var bytes = [], length = key.length, index = 0, code;
       for (i = 0; i < length; ++i) {
         code = key.charCodeAt(i);
@@ -458,20 +407,6 @@
         }
       }
       key = bytes;
-    } else {
-      if (type === 'object') {
-        if (key === null) {
-          throw new Error(ERROR);
-        } else if (ARRAY_BUFFER && key.constructor === ArrayBuffer) {
-          key = new Uint8Array(key);
-        } else if (!Array.isArray(key)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(key)) {
-            throw new Error(ERROR);
-          }
-        }
-      } else {
-        throw new Error(ERROR);
-      }
     }
 
     if (key.length > 64) {
@@ -506,21 +441,24 @@
     }
   };
 
-  var exports = createMethod();
-  exports.sha256 = exports;
-  exports.sha224 = createMethod(true);
-  exports.sha256.hmac = createHmacMethod();
-  exports.sha224.hmac = createHmacMethod(true);
+  var sha256 = createMethod();
+  var sha224 = createMethod(true);
+  sha256.sha256 = sha256;
+  sha256.sha224 = sha224;
+  sha256.hmac = createHmacMethod();
+  sha224.hmac = createHmacMethod(true);
 
-  if (COMMON_JS) {
-    module.exports = exports;
-  } else {
-    root.sha256 = exports.sha256;
-    root.sha224 = exports.sha224;
-    if (AMD) {
-      define(function () {
-        return exports;
-      });
-    }
+  const root =
+    typeof globalThis === 'object' ? globalThis :
+    typeof self === 'object' ? self :
+    typeof window === 'object' ? window :
+    typeof global === 'object' ? global :
+    undefined;
+
+  if (root) {
+    root.sha224 = sha224;
   }
-})();
+
+  return sha256;
+
+}));

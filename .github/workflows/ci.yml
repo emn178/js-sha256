@@ -9,11 +9,38 @@ on:
         - master
 
 jobs:
-  ci:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Pack npm package
+        run: |
+          mkdir -p package-artifact
+          npm pack --pack-destination package-artifact
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-node-24
+          path: package-artifact/*.tgz
+          if-no-files-found: error
+
+  runtime-test:
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [16.x, 18.x, 20.x, 22.x, 24.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,19 +53,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        if: matrix.node-version == '22.x'
-        run: npm run build
+      - name: Download package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: package-node-24
+          path: package-artifact
 
-      - name: Run tests
-        run: npm test
+      - name: Extract package artifact
+        run: tar -xzf package-artifact/*.tgz --strip-components=1 -C .
 
-      - name: Generate coverage report
-        if: matrix.node-version == '22.x'
-        run: npm run coverage
+      - name: Run runtime tests
+        if: matrix.node-version != '24.x'
+        run: npm run test:runtime
+
+      - name: Run runtime tests with coverage
+        if: matrix.node-version == '24.x'
+        run: npm run test:coverage
+
+      - name: Install Chromium
+        if: matrix.node-version == '24.x'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser Worker tests
+        if: matrix.node-version == '24.x'
+        run: npm run test:browser
 
       - name: Upload to coveralls
-        if: matrix.node-version == '22.x'
+        if: matrix.node-version == '24.x'
         uses: coverallsapp/github-action@v2
         with:
-          file: ./coverage.lcov
+          file: ./coverage/lcov.info

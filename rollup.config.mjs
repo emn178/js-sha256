@@ -1,48 +1,69 @@
-import commonjs from '@rollup/plugin-commonjs';
+import { readFileSync } from 'fs';
 import terser from '@rollup/plugin-terser';
 
-const disableNodeJs = {
-  name: 'disable-node-js',
-  transform(code, id) {
-    if (id.endsWith('/src/sha256.js')) {
-      const nodeJsDeclaration = /^\s*var NODE_JS = .*;$/m;
-      if (!nodeJsDeclaration.test(code)) {
-        this.error('Could not find the NODE_JS declaration');
-      }
-      return code.replace(nodeJsDeclaration, '  var NODE_JS = false;');
-    }
-  }
-};
+const { version } = JSON.parse(
+  readFileSync(new URL('package.json', import.meta.url), 'utf8')
+);
+
+const banner = `/**
+ * [js-sha256]{@link https://github.com/emn178/js-sha256}
+ *
+ * @version ${version}
+ * @author Chen, Yi-Cyuan [emn178@gmail.com]
+ * @copyright Chen, Yi-Cyuan 2014-2026
+ * @license MIT
+ */`;
 
 export default [
   {
-    input: 'src/sha256.mjs',
-    external: ['crypto', 'buffer'],
+    input: 'src/cjs.mjs',
     output: {
-      file: 'build/sha256.node.mjs',
-      format: 'es'
-    },
-    plugins: [commonjs({
-      strictRequires: false
-    })]
+      banner,
+      exports: 'default',
+      file: 'build/sha256.cjs',
+      format: 'cjs'
+    }
   },
   {
-    input: 'src/sha256.mjs',
+    input: 'src/umd.mjs',
     output: {
-      file: 'build/sha256.mjs',
-      format: 'es'
-    },
-    plugins: [disableNodeJs, commonjs({
-      strictRequires: false,
-      ignore: ['crypto', 'buffer']
-    })]
+      banner,
+      exports: 'default',
+      file: 'build/sha256.js',
+      format: 'umd',
+      name: 'sha256'
+    }
   },
   {
-    input: 'build/sha256.mjs',
+    external: ['crypto'],
+    input: 'src/node-cjs.mjs',
     output: {
+      banner,
+      exports: 'default',
+      file: 'build/sha256.node.cjs',
+      format: 'cjs'
+    }
+  },
+  {
+    input: 'src/umd.mjs',
+    output: [
+      {
+        banner,
+        exports: 'default',
+        file: 'build/sha256.min.js',
+        format: 'umd',
+        name: 'sha256',
+        plugins: [terser()]
+      }
+    ]
+  },
+  {
+    input: 'src/index.mjs',
+    output: {
+      banner,
       file: 'build/sha256.min.mjs',
-      format: 'es'
-    },
-    plugins: [terser()]
+      format: 'es',
+      plugins: [terser()]
+    }
   }
 ];

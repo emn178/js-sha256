@@ -1,5 +1,26 @@
 # Change Log
 
+## v1.0.0 / 2026-07-27
+### Added
+- Add dedicated ESM, CommonJS, Node.js, and browser distribution entry points.
+- Add streaming support to the native Node.js SHA-256, SHA-224, and HMAC implementations.
+- Add distribution contract tests and real browser Web Worker tests with Playwright.
+- Add Node.js 16, 18, 20, 22, and 24 runtime tests against the packed npm artifact.
+
+### Changed
+- Refactor the implementation into environment-independent core and Node.js modules.
+- Use the native Node.js `crypto` implementation for hashing and HMAC.
+- Load the package version automatically when generating distribution banners.
+- Export unminified ESM source directly and build only CommonJS and browser/minified distributions.
+- Replace `expect.js`, NYC, Tiny Worker, and UglifyJS with Node.js assert, c8, Playwright, and Rollup/Terser.
+- Build automatically before `npm pack` and `npm publish`.
+- Throw error if update after finalize
+
+### Removed
+- Remove runtime CommonJS, AMD, Node.js, Web Worker, and ArrayBuffer environment switches from the core implementation.
+- Remove legacy environment flags and obsolete compatibility polyfills.
+- Remove the old generated `sha256.mjs` and `sha256.node.mjs` entry points.
+
 ## v0.12.0 / 2026-07-18
 ### Added
 - support ESM #44

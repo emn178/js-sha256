@@ -78,32 +78,30 @@
     }
   };
 
-  if (!(typeof JS_SHA256_NO_ARRAY_BUFFER === 'boolean' && JS_SHA256_NO_ARRAY_BUFFER)) {
-    testCases.sha256_hmac.Uint8Array = {
-      'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
-        new Uint8Array(0),
-        'Hi There'
-      ]
-    };
-    testCases.sha256_hmac.ArrayBuffer = {
-      'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
-        new ArrayBuffer(0),
-        'Hi There'
-      ]
-    };
-    testCases.sha224_hmac.Uint8Array = {
-      'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
-        new ArrayBuffer(0),
-        'Hi There'
-      ]
-    };
-    testCases.sha224_hmac.ArrayBuffer = {
-      'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
-        new ArrayBuffer(0),
-        'Hi There'
-      ]
-    };
-  }
+  testCases.sha256_hmac.Uint8Array = {
+    'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
+      new Uint8Array(0),
+      'Hi There'
+    ]
+  };
+  testCases.sha256_hmac.ArrayBuffer = {
+    'e48411262715c8370cd5e7bf8e82bef53bd53712d007f3429351843b77c7bb9b': [
+      new ArrayBuffer(0),
+      'Hi There'
+    ]
+  };
+  testCases.sha224_hmac.Uint8Array = {
+    'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
+      new ArrayBuffer(0),
+      'Hi There'
+    ]
+  };
+  testCases.sha224_hmac.ArrayBuffer = {
+    'da8f94de91d62154b55ea4e8d6eb133f6d553bcd1f1ba205b9488945': [
+      new ArrayBuffer(0),
+      'Hi There'
+    ]
+  };
 
   var errorTestCases = [null, undefined, { length: 0 }, 0, 1, false, true, NaN, Infinity, function () {}];
 
@@ -179,7 +177,6 @@
         call: function (key, message) {
           var hash = algorithm.update(key, message);
           hash.hex();
-          hash.update(message);
           return hash.hex();
         }
       }
@@ -197,7 +194,7 @@
                 for (var hash in testCase) {
                   (function (message, hash) {
                     it('should be equal', function () {
-                      expect(method.call(message[0], message[1])).to.be(hash);
+                      assert.equal(method.call(message[0], message[1]), hash);
                     });
                   })(testCase[hash], hash);
                 }
@@ -216,7 +213,7 @@
                 for (var hash in testCase) {
                   (function (message, hash) {
                     it('should be equal', function () {
-                      expect(method.call(message[0], message[1])).to.be(hash);
+                      assert.equal(method.call(message[0], message[1]), hash);
                     });
                   })(testCase[hash], hash);
                 }
@@ -230,9 +227,9 @@
         errorTestCases.forEach(function (testCase) {
           context('when ' + testCase, function () {
             it('should throw error', function () {
-              expect(function () {
+              assert.throws(function () {
                 algorithm(testCase, '');
-              }).to.throwError(/input is invalid type/);
+              }, /input is invalid type/);
             });
           });
         });
