@@ -29,6 +29,12 @@
         'd691014feebf35b3500ef6f6738d0094cac63628a7a018a980a40292a77703d1': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         '81a1472ebdeb09406a783d607ff49ee2fde3e9f44ac1cd158ad8d6ad3c4e69fa': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
       },
+      'UTF8 unpaired surrogates': {
+        '83d544ccc223c057d2bf80d3f2a32982c32c3c0db8e2674820da5064783fb097': '\ud800',
+        '05087813392efc16fe8ff448920c6328e53af865df39419436659d9ffda90f7b': 'a\ud83db',
+        '9b032698073e49a0c207eec31b288e75435afbbeb025cece0486f3a2f34befc7': '\ud83d\ud83d\ude00\udfff',
+        '44a101d453287d6360d95a104e34ac6f5b329fa9cb7b225c59e762a2a337ba63': Array(63).join('a') + '\ud800b'
+      },
       'special length': {
         '5e6b963e2b6444dab8544beab8532850cef2a9d143872a6a5384abe37e61b3db': '0123456780123456780123456780123456780123456780123456780',
         '85d240a4a03a0710423fc4f701da51e8785c9eaa96d718ab1c7991d6afd60d62': '01234567801234567801234567801234567801234567801234567801',
@@ -61,6 +67,12 @@
       'UTF8 more than 64 bytes': {
         '0dda421f3f81272418e1313673e9d74b7f2d04efc9c52c69458e12c3': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         'a8cb74a54e6dc6ab6110db3915ba08ffe5e1abafaea78538fa12a626': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
+      },
+      'UTF8 unpaired surrogates': {
+        '150865d98f78afe3ef15ff630e6533ce657e6a57bff43d5e79f9ec98': '\ud800',
+        'bb32ef954c48214329decb4899e01246c48d32ecb0864ba9923002b2': 'a\ud83db',
+        '9e38824afbac81e64c82a11ab7c885c2da317e3321ced52a0828d3b2': '\ud83d\ud83d\ude00\udfff',
+        '35409c50c0fe1461a3afc0d2a66ab2fe15053b62042aabf12eb205c2': Array(63).join('a') + '\ud800b'
       },
       'special length': {
         'bc4a354d66f3cff4bc6dd6a88fbb0435cede7fd5fe94da0760cb1924': '0123456780123456780123456780123456780123456780123456780',
@@ -237,6 +249,14 @@
                 algorithm(testCase);
               }, /input is invalid type/);
             });
+          });
+        });
+
+        context('when a surrogate pair is split across updates', function () {
+          it('should encode each unpaired half as U+FFFD', function () {
+            var expected = name === 'sha256' ? ['df6bc292638d56dc79730424c8c70e0b90271d0ee49a96462e3b1c2fbc37b810', '05087813392efc16fe8ff448920c6328e53af865df39419436659d9ffda90f7b'] : ['bca4aabe305ab5d43b0143f884eb75e93e85532037344aea0fb53ae7', 'bb32ef954c48214329decb4899e01246c48d32ecb0864ba9923002b2'];
+            assert.equal(algorithm.update('a\ud83d').update('\ude00b').hex(), expected[0]);
+            assert.equal(algorithm.update('a\ud83d').update('b').hex(), expected[1]);
           });
         });
 

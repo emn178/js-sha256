@@ -1,7 +1,7 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 1.0.0
+ * @version 1.0.1
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2026
  * @license MIT
@@ -138,7 +138,7 @@
     var result = formatMessage(message);
     message = result[0];
     var isString = result[1];
-    var code, index = 0, i, length = message.length, blocks = this.blocks;
+    var code, code2, index = 0, i, length = message.length, blocks = this.blocks;
     while (index < length) {
       if (this.hashed) {
         this.hashed = false;
@@ -161,12 +161,18 @@
             blocks[i >>> 2] |= (0xe0 | (code >>> 12)) << SHIFT[i++ & 3];
             blocks[i >>> 2] |= (0x80 | ((code >>> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >>> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
-          } else {
-            code = 0x10000 + (((code & 0x3ff) << 10) | (message.charCodeAt(++index) & 0x3ff));
+          } else if (code < 0xdc00 && (code2 = message.charCodeAt(index + 1)) >= 0xdc00 && code2 < 0xe000) {
+            ++index;
+            code = 0x10000 + (((code & 0x3ff) << 10) | (code2 & 0x3ff));
             blocks[i >>> 2] |= (0xf0 | (code >>> 18)) << SHIFT[i++ & 3];
             blocks[i >>> 2] |= (0x80 | ((code >>> 12) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >>> 2] |= (0x80 | ((code >>> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >>> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+          } else {
+            // unpaired surrogate: U+FFFD
+            blocks[i >>> 2] |= 0xef << SHIFT[i++ & 3];
+            blocks[i >>> 2] |= 0xbf << SHIFT[i++ & 3];
+            blocks[i >>> 2] |= 0xbd << SHIFT[i++ & 3];
           }
         }
       } else {
@@ -386,7 +392,7 @@
     var i, result = formatMessage(key);
     key = result[0];
     if (result[1]) {
-      var bytes = [], length = key.length, index = 0, code;
+      var bytes = [], length = key.length, index = 0, code, code2;
       for (i = 0; i < length; ++i) {
         code = key.charCodeAt(i);
         if (code < 0x80) {
@@ -398,12 +404,18 @@
           bytes[index++] = (0xe0 | (code >>> 12));
           bytes[index++] = (0x80 | ((code >>> 6) & 0x3f));
           bytes[index++] = (0x80 | (code & 0x3f));
-        } else {
-          code = 0x10000 + (((code & 0x3ff) << 10) | (key.charCodeAt(++i) & 0x3ff));
+        } else if (code < 0xdc00 && (code2 = key.charCodeAt(i + 1)) >= 0xdc00 && code2 < 0xe000) {
+          ++i;
+          code = 0x10000 + (((code & 0x3ff) << 10) | (code2 & 0x3ff));
           bytes[index++] = (0xf0 | (code >>> 18));
           bytes[index++] = (0x80 | ((code >>> 12) & 0x3f));
           bytes[index++] = (0x80 | ((code >>> 6) & 0x3f));
           bytes[index++] = (0x80 | (code & 0x3f));
+        } else {
+          // unpaired surrogate: U+FFFD
+          bytes[index++] = 0xef;
+          bytes[index++] = 0xbf;
+          bytes[index++] = 0xbd;
         }
       }
       key = bytes;

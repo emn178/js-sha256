@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.0.1 / 2026-11-17
+### Fixed
+- Unpaired UTF-16 surrogates in string input (including HMAC keys) produced wrong digests and consumed the following code unit in the browser/core implementation. They are now encoded as U+FFFD, matching `TextEncoder` and the Node.js implementation.
+
 ## v1.0.0 / 2026-07-27
 ### Added
 - Add dedicated ESM, CommonJS, Node.js, and browser distribution entry points.

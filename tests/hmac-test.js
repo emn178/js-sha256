@@ -41,6 +41,10 @@
         '865cc329d317f6d9fdbd183a3c5cc5fd4c370d11f98abbbb404bceb1e6392c7e': ['中文', '中文'],
         'efeef87be5731506b69bb64a9898a456dd12c94834c36a4d8ba99e3db79ad7ed': ['aécio', 'aécio'],
         '8a6e527049b9cfc7e1c84bcf356a1289c95da68a586c03de3327f3de0d3737fe': ['𠜎', '𠜎']
+      },
+      'UTF8 unpaired surrogates': {
+        'f029dbf2fb1aaaa143d508d2eb3f43660013daeb46896f058536c41bc114523d': ['\ud800', 'a\ud83db'],
+        'c01f3408e4acbf0129522609f7d26d3f20666b40e6faa0b50c7f592c7e6e739e': ['a\udc00b', '\ud800']
       }
     },
     sha224_hmac: {
@@ -74,6 +78,10 @@
         'e2280928fe813aeb7fa59aa14dd5e589041bfdf91945d19d25b9f3db': ['中文', '中文'],
         '86c53dc054b16f6e006a254891bc9ff0da5df8e1a6faee3b0aaa732d': ['aécio', 'aécio'],
         'e9e5991bfb84506b105f800afac1599ff807bb8e20db8ffda48997b9': ['𠜎', '𠜎']
+      },
+      'UTF8 unpaired surrogates': {
+        '9869bc56758479ea8e98c51119db2de42d91ce77166fd43c0e006e20': ['\ud800', 'a\ud83db'],
+        '5d4a0832f4e767b2ada5855f9b65645741dba4ecc89559bc695da390': ['a\udc00b', '\ud800']
       }
     }
   };
