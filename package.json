@@ -61,5 +61,8 @@
   "bugs": {
     "url": "https://github.com/emn178/js-sha256/issues"
   },
-  "browser": "build/sha256.cjs"
+  "browser": "build/sha256.cjs",
+  "overrides": {
+    "serialize-javascript": "^7.1.3"
+  }
 }
