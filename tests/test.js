@@ -100,6 +100,11 @@
     'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': new ArrayBuffer(0),
     '6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d': new ArrayBuffer(1)
   };
+  testCases.sha256['ArrayBuffer view'] = {
+    '8885cb2424931045cbc3f70dec12f60f965993ebeb8636ec49e5011335227349': new Int8Array([-1, -128, 65, 0, -2]),
+    '25dfd29c09617dcc9852281c030e5b3037a338a4712a42a21c907f259c6412a0': new Uint16Array(new Uint8Array([2, 1]).buffer),
+    '3733cd977ff8eb18b987357e22ced99f46097f31ecb239e878ae63760e83e4d5': new DataView(new Uint8Array([9, 72, 69, 76, 76, 79, 9]).buffer, 1, 5)
+  };
   testCases.sha224.Uint8Array = {
     'e17541396a3ecd1cd5a2b968b84e597e8eae3b0ea3127963bf48dd3b': new Uint8Array([211, 212]),
     '730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])    
@@ -112,6 +117,11 @@
     'fff9292b4201617bdc4d3053fce02734166a683d7d858a7f5f59b073': new ArrayBuffer(1),
   };
 
+  testCases.sha224['ArrayBuffer view'] = {
+    'd1cb7c6fa5082db7f0dd9748e3e5018e071e3ec6719ed5f58973b145': new Int8Array([-1, -128, 65, 0, -2]),
+    '0ad90774f63f37bfe02760a853cf4f1fe8d1911849f47c9afe479f7e': new Uint16Array(new Uint8Array([2, 1]).buffer),
+    'ddb584a8a86bf5f4b700262bf5901f473d133869fac0ad86215ed2ec': new DataView(new Uint8Array([9, 72, 69, 76, 76, 79, 9]).buffer, 1, 5)
+  };
   testCases.sha256.Buffer = {
     'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Buffer.from([]),
     'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592': Buffer.from(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))

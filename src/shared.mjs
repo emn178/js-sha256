@@ -15,7 +15,8 @@ export var formatMessage = function (message) {
     if (message.constructor === ArrayBuffer) {
       return [new Uint8Array(message), false];
     } else if (ArrayBuffer.isView(message)) {
-      return [message, false];
+      // read the underlying bytes of any view (Int8Array, DataView, Uint16Array, ...)
+      return [new Uint8Array(message.buffer, message.byteOffset, message.byteLength), false];
     }
   }
   throw new Error(INPUT_ERROR);

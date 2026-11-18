@@ -1,4 +1,4 @@
-type Message = string | number[] | ArrayBuffer | Uint8Array;
+type Message = string | number[] | ArrayBuffer | ArrayBufferView;
 
 interface Hasher {
   /**

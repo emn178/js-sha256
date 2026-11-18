@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.1.0 / 2026-11-18
+### Fixed
+- Incorrect hash for `DataView` input, and for `Int8Array` with negative values in browsers.
+
+### Changed
+- Multi-byte typed arrays such as `Uint16Array`, `Uint32Array` and `Float32Array` are now hashed by their underlying bytes, the same as Node.js `crypto` and Web Crypto. Previously each element was treated as one byte.
+
 ## v1.0.1 / 2026-11-17
 ### Fixed
 - Unpaired UTF-16 surrogates in string input (including HMAC keys) produced wrong digests and consumed the following code unit in the browser/core implementation. They are now encoded as U+FFFD, matching `TextEncoder` and the Node.js implementation.

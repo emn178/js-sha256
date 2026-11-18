@@ -1,7 +1,7 @@
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
  *
- * @version 1.0.1
+ * @version 1.1.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2026
  * @license MIT
@@ -29,7 +29,8 @@
       if (message.constructor === ArrayBuffer) {
         return [new Uint8Array(message), false];
       } else if (ArrayBuffer.isView(message)) {
-        return [message, false];
+        // read the underlying bytes of any view (Int8Array, DataView, Uint16Array, ...)
+        return [new Uint8Array(message.buffer, message.byteOffset, message.byteLength), false];
       }
     }
     throw new Error(INPUT_ERROR);

@@ -110,7 +110,7 @@ sha224('The quick brown fox jumps over the lazy dog.'); // 619cba8e8e05826e9b8c5
 sha256('中文'); // 72726d8818f693066ceb69afa364218b692e62ea92b385782363780f47529c21
 sha224('中文'); // dfbab71afdf54388af4d55f8bd3de8c9b15e0eb916bf9125f4a959d4
 
-// It also supports byte `Array`, `Uint8Array`, `ArrayBuffer` input
+// It also supports byte `Array`, `Uint8Array`, `ArrayBuffer` and other `ArrayBuffer` views (their underlying bytes are hashed)
 sha256([]); // e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 sha256(new Uint8Array([211, 212])); // 182889f925ae4e5cc37118ded6ed87f7bdc7cab5ec5e78faef2e50048999473f
 
